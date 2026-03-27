@@ -116,7 +116,10 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
             y = y_of(point['avg_unit_price'])
             coords.append(f'{x:.1f},{y:.1f}')
             plotted.append((x, y, point))
-            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.2" fill="{color}" stroke="#fff" stroke-width="1.5"><title>{esc(label)} {esc(month)}: {point["avg_unit_price"]:.2f} 萬/坪 (n={point["sample_count"]})</title></circle>')
+            point_fill = color if point.get('has_real') else '#ffffff'
+            point_stroke = color
+            point_note = '含真實樣本' if point.get('has_real') else '僅 baseline'
+            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.6" fill="{point_fill}" stroke="{point_stroke}" stroke-width="2"><title>{esc(label)} {esc(month)}: {point["avg_unit_price"]:.2f} 萬/坪 (n={point["sample_count"]}, {point_note})</title></circle>')
         if coords:
             label_text = ''
             if plotted:
@@ -139,7 +142,7 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
       <div class="chart-head">
         <div>
           <h3>{esc(title)}</h3>
-          <p class="muted">Y 軸：平均單價（{esc(y_label)}）｜ X 軸：月份</p>
+          <p class="muted">Y 軸：平均單價（{esc(y_label)}）｜ X 軸：月份｜實心點=含真實樣本、空心點=僅 baseline</p>
         </div>
         <div class="legend legend-buttons">{"".join(legends)}</div>
       </div>
@@ -150,7 +153,7 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
         {''.join(series_blocks)}
         {''.join(x_labels)}
       </svg>
-      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱，手機上比較不容易看錯。</p>
+      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱。實心點代表該月份含真實樣本，空心點代表目前只有 baseline 補點。</p>
     </div>
     '''
 
@@ -228,6 +231,9 @@ def main():
         unit_prices = [x.get('unit_price', 0) for x in items]
         total_prices = [x.get('total_price', 0) for x in items]
         sources = ', '.join(sorted({x.get('source', '') for x in items if x.get('source')}))
+        sources_list = sorted({x.get('source', '') for x in items if x.get('source')})
+        has_real = any(x.get('source') != 'public-baseline' for x in items)
+        has_baseline = any(x.get('source') == 'public-baseline' for x in items)
         series_export.append({
             'community': community,
             'layout_type': layout,
@@ -238,7 +244,9 @@ def main():
             'min_unit_price': round(min([v for v in unit_prices if isinstance(v, (int, float)) and v > 0], default=0), 2),
             'max_unit_price': round(max([v for v in unit_prices if isinstance(v, (int, float)) and v > 0], default=0), 2),
             'avg_total_price': round(avg(total_prices), 1),
-            'sources': sorted({x.get('source', '') for x in items if x.get('source')})
+            'sources': sources_list,
+            'has_real': has_real,
+            'has_baseline': has_baseline
         })
         series_rows.append(
             f"<tr data-community=\"{esc(community)}\" data-layout=\"{esc(layout)}\"><td>{esc(community)}</td><td>{esc(layout)}</td><td>{esc(month)}</td><td>{len(items)}</td><td>{avg(unit_prices):.2f}</td><td>{median(unit_prices):.2f}</td><td>{min([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{max([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{avg(total_prices):.1f}</td><td>{esc(sources)}</td></tr>"
