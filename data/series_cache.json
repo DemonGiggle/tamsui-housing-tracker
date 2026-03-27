@@ -9241,16 +9241,17 @@
     "community": "清淞",
     "layout_type": "3房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 33.27,
-    "median_unit_price": 33.27,
+    "sample_count": 2,
+    "avg_unit_price": 36.09,
+    "median_unit_price": 36.09,
     "min_unit_price": 33.27,
-    "max_unit_price": 33.27,
-    "avg_total_price": 1464.3,
+    "max_unit_price": 38.9,
+    "avg_total_price": 1392.2,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -9881,16 +9882,17 @@
     "community": "荷雅名人館",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 35.67,
-    "median_unit_price": 35.67,
+    "sample_count": 2,
+    "avg_unit_price": 35.89,
+    "median_unit_price": 35.89,
     "min_unit_price": 35.67,
-    "max_unit_price": 35.67,
-    "avg_total_price": 553.5,
+    "max_unit_price": 36.1,
+    "avg_total_price": 536.8,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
