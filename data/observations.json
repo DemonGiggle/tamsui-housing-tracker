@@ -1,0 +1,41 @@
+[
+  {
+    "observed_at": "2026-03-27",
+    "type": "seed",
+    "region": "淡海新市鎮",
+    "community": "示例社區",
+    "source": "manual",
+    "total_price": 1388.0,
+    "unit_price": 39.8,
+    "size_ping": 34.9,
+    "building_age": 5,
+    "parking": true,
+    "note": "MVP seed data for dashboard preview"
+  },
+  {
+    "observed_at": "2026-03-27",
+    "type": "seed",
+    "region": "竹圍",
+    "community": "示例社區 B",
+    "source": "manual",
+    "total_price": 1680.0,
+    "unit_price": 52.4,
+    "size_ping": 32.1,
+    "building_age": 11,
+    "parking": false,
+    "note": "MVP seed data for dashboard preview"
+  },
+  {
+    "observed_at": "2026-03-27",
+    "type": "listing",
+    "region": "紅樹林",
+    "community": "示例社區C",
+    "source": "manual",
+    "total_price": 1520.0,
+    "unit_price": 46.2,
+    "size_ping": 31.7,
+    "building_age": 0.0,
+    "parking": false,
+    "note": "MVP smoke test"
+  }
+]
