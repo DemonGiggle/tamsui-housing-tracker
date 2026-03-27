@@ -1,6 +1,6 @@
 # Tamsui Housing Tracker
 
-MVP for long-term Tamsui housing market tracking.
+MVP for long-term Tamsui housing market tracking, now oriented around monthly baseline tracking first.
 
 ## Goals
 
@@ -13,6 +13,7 @@ Track long-term price trends for:
 ## MVP scope
 
 - local JSON dataset
+- baseline-first monthly tracking
 - simple update script for manual observations
 - static HTML dashboard
 - community watchlist
@@ -83,3 +84,9 @@ python3 scripts/update_all.py --import-real
 ## Notes
 
 This MVP is intentionally simple. It is designed to start collecting structured housing observations first, then evolve into automated scraping, charts, alerts, and richer market analysis.
+
+## Baseline-first direction
+
+Current working direction: prioritize collecting a monthly baseline for each community × layout pair.
+
+In this project, baseline is **not fake transaction data**. It is a monthly reference point built from incomplete but grounded public information, such as community summary pricing, layout ranges, and limited verifiable samples. For the current use case, that baseline layer is already useful enough to track monthly price position and direction over time.
