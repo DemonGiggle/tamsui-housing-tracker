@@ -95,7 +95,10 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
         grid.append(f'<text x="{margin["left"]-8}" y="{y+4:.1f}" text-anchor="end" font-size="11" fill="#6b7280">{y_val:.1f}</text>')
 
     x_labels = []
+    label_step = 3 if len(all_months) > 18 else 2 if len(all_months) > 10 else 1
     for idx, month in enumerate(all_months):
+        if idx % label_step != 0 and idx != len(all_months) - 1:
+            continue
         x = x_of(idx)
         x_labels.append(f'<text x="{x:.1f}" y="{height-14}" text-anchor="middle" font-size="11" fill="#6b7280">{esc(month)}</text>')
 
@@ -153,7 +156,7 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
         {''.join(series_blocks)}
         {''.join(x_labels)}
       </svg>
-      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱。實心點代表該月份含真實樣本，空心點代表目前只有 baseline 補點。</p>
+      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱。X 軸日期已做抽樣顯示，避免全部擠在一起。實心點代表該月份含真實樣本，空心點代表目前只有 baseline 補點。</p>
     </div>
     '''
 
@@ -480,7 +483,8 @@ def main():
         <h2>資料說明</h2>
         <ul>
           <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄，可信度高於 baseline。</li>
-          <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
+          <li><strong>public-baseline</strong>：不是假裝有一筆真實成交，而是當公開頁目前只能取得均價、格局範圍、少量樣本或社區基準資訊時，先建立可追蹤的月度基準點，方便後續用真實樣本覆蓋。</li>
+          <li>換句話說，baseline 的用途是「補趨勢骨架」，不是宣稱那個月份一定有完整真實成交資料。</li>
           <li>目前摩納哥、托斯卡尼麥迪奇名家、尚海、高第、清淞、荷雅名人館、荷雅時尚館已有多筆公開頁明細；水立方、托斯卡尼翡冷翠仍有部分 baseline 佔比較高，後續會繼續補正。</li>
           <li><strong>raw_hash</strong> 用來避免同一批原始 observation 被重複匯入；重點分析則放在月度聚合後的價格序列。</li>
         </ul>
