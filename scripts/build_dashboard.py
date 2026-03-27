@@ -30,6 +30,25 @@ def chip(text):
     return f'<span class="chip">{esc(text)}</span>'
 
 
+def summarize_rows(items):
+    if not items:
+        return {
+            'count': 0,
+            'avg_unit_price': 0,
+            'avg_total_price': 0,
+            'latest': '',
+            'latest_layout': '—',
+        }
+    latest = sorted(items, key=lambda x: x.get('observed_at', ''))[-1]
+    return {
+        'count': len(items),
+        'avg_unit_price': avg([x.get('unit_price', 0) for x in items]),
+        'avg_total_price': avg([x.get('total_price', 0) for x in items]),
+        'latest': latest.get('observed_at', ''),
+        'latest_layout': latest.get('layout_type', '未分類') or '未分類',
+    }
+
+
 def main():
     rows = load_json(DATA_PATH, [])
     watchlist = load_json(WATCHLIST_PATH, {'regions': [], 'communities': [], 'layout_types': []})
@@ -84,6 +103,7 @@ def main():
         )
 
     watch_community_cards = []
+    monaco_sections = []
     for item in watchlist.get('communities', []):
         name = item.get('name', '')
         region = item.get('region', '')
@@ -104,6 +124,41 @@ def main():
         </div>
         """)
 
+        if name == '摩納哥社區':
+            core_stats = summarize_rows(by_community.get(name, []))
+            nearby_rows = []
+            for nearby_name in nearby:
+                stats = summarize_rows(by_community.get(nearby_name, []))
+                nearby_rows.append(
+                    f"<tr><td>{esc(nearby_name)}</td><td>{stats['count']}</td><td>{stats['avg_unit_price']:.2f}</td><td>{stats['latest'] or '—'}</td><td>{esc(stats['latest_layout'])}</td></tr>"
+                )
+            monaco_sections.append(f"""
+            <section>
+              <h2>摩納哥社區專區</h2>
+              <div class=\"grid\">
+                <div class=\"card focus-card\">
+                  <div class=\"eyebrow\">核心觀察社區</div>
+                  <h3>摩納哥社區</h3>
+                  <p>樣本數：<strong>{core_stats['count']}</strong></p>
+                  <p>平均單價：<strong>{core_stats['avg_unit_price']:.2f}</strong> 萬/坪</p>
+                  <p>平均總價：<strong>{core_stats['avg_total_price']:.1f}</strong> 萬</p>
+                  <p>最近觀察：{esc(core_stats['latest'] or '—')}</p>
+                  <p>最近房型：{esc(core_stats['latest_layout'])}</p>
+                </div>
+                <div class=\"card\">
+                  <div class=\"eyebrow\">周邊社區池</div>
+                  <h3>地理附近社區</h3>
+                  <div class=\"chips\">{nearby_html}</div>
+                  <p class=\"muted\">先把摩納哥與周邊街廓一起追蹤，之後再慢慢累積成自己的在地資料庫。</p>
+                </div>
+              </div>
+              <table>
+                <thead><tr><th>周邊社區</th><th>樣本數</th><th>平均單價</th><th>最近觀察</th><th>最近房型</th></tr></thead>
+                <tbody>{''.join(nearby_rows) or '<tr><td colspan="5">尚無周邊資料</td></tr>'}</tbody>
+              </table>
+            </section>
+            """)
+
     html = f"""<!doctype html>
 <html lang=\"zh-Hant\">
 <head>
@@ -116,10 +171,12 @@ def main():
     .hero {{ background: white; border-radius: 16px; padding: 20px; box-shadow: 0 6px 18px rgba(0,0,0,.06); }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }}
     .card {{ background: white; border-radius: 14px; padding: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.05); }}
+    .focus-card {{ border: 2px solid #6366f1; }}
     .priority-high {{ border: 2px solid #f59e0b; }}
     .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }}
     .chip {{ display: inline-block; padding: 6px 10px; border-radius: 999px; background: #eef2ff; font-size: 13px; }}
     .nearby-block {{ margin-top: 12px; }}
+    .eyebrow {{ font-size: 12px; color: #6366f1; font-weight: 700; letter-spacing: .04em; margin-bottom: 8px; }}
     table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; margin-top: 16px; }}
     th, td {{ text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }}
     th {{ background: #eef2ff; }}
@@ -137,6 +194,8 @@ def main():
       <p>資料筆數：<strong>{len(rows)}</strong></p>
       <p class=\"muted\">重點：每坪單價要搭配房型一起看，也要搭配附近可比社區一起看。</p>
     </section>
+
+    {''.join(monaco_sections)}
 
     <section>
       <h2>特別觀察建案</h2>
@@ -172,9 +231,9 @@ def main():
     <section class=\"card\">
       <h2>下一步建議</h2>
       <ul>
-        <li>先把摩納哥社區周邊社區名單補進 nearby_communities</li>
+        <li>優先補摩納哥與周邊社區的真實觀察資料</li>
         <li>之後每筆資料都加上房型，讓單價比較更準</li>
-        <li>下一版可加「區域 × 房型」與「摩納哥 vs 周邊社區」比較表</li>
+        <li>下一版可加「摩納哥 vs 周邊社區」圖表化比較</li>
       </ul>
     </section>
   </div>
