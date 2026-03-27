@@ -60,12 +60,12 @@ def summarize_rows(items):
     }
 
 
-def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
+def svg_line_chart(series_map, title, chart_id, y_label='萬/坪', metric='avg_unit_price'):
     width = 920
     height = 340
     margin = {'left': 56, 'right': 90, 'top': 24, 'bottom': 44}
     all_months = sorted({point['month'] for points in series_map.values() for point in points})
-    all_vals = [point['avg_unit_price'] for points in series_map.values() for point in points if point['avg_unit_price'] > 0]
+    all_vals = [point.get(metric, 0) for points in series_map.values() for point in points if point.get(metric, 0) > 0]
     if not all_months or not all_vals:
         return '<div class="card muted">目前沒有足夠資料可畫圖。</div>'
     min_y = min(all_vals)
@@ -116,13 +116,15 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
             if not point:
                 continue
             x = x_of(idx)
-            y = y_of(point['avg_unit_price'])
+            y = y_of(point.get(metric, 0))
             coords.append(f'{x:.1f},{y:.1f}')
             plotted.append((x, y, point))
             point_fill = color if point.get('has_real') else '#ffffff'
             point_stroke = color
             point_note = '含真實樣本' if point.get('has_real') else '僅 baseline'
-            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.6" fill="{point_fill}" stroke="{point_stroke}" stroke-width="2"><title>{esc(label)} {esc(month)}: {point["avg_unit_price"]:.2f} 萬/坪 (n={point["sample_count"]}, {point_note})</title></circle>')
+            metric_label = '中位單價' if metric == 'median_unit_price' else '平均單價'
+            metric_value = point.get(metric, 0)
+            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.6" fill="{point_fill}" stroke="{point_stroke}" stroke-width="2"><title>{esc(label)} {esc(month)}: {metric_label} {metric_value:.2f} 萬/坪 (n={point["sample_count"]}, {point_note})</title></circle>')
         if coords:
             label_text = ''
             if plotted:
@@ -141,11 +143,15 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
             )
 
     return f'''
-    <div class="card chart-card" data-chart-id="{esc(chart_id)}">
+    <div class="card chart-card chart-variant {'active' if metric == 'median_unit_price' else ''}" data-chart-id="{esc(chart_id)}" data-metric="{'median' if metric == 'median_unit_price' else 'avg'}">
       <div class="chart-head">
         <div>
           <h3>{esc(title)}</h3>
-          <p class="muted">Y 軸：平均單價（{esc(y_label)}）｜ X 軸：月份｜實心點=含真實樣本、空心點=僅 baseline</p>
+          <p class="muted">Y 軸：<span class="metric-label">{esc('中位單價' if metric == 'median_unit_price' else '平均單價')}</span>（{esc(y_label)}）｜ X 軸：月份｜實心點=含真實樣本、空心點=僅 baseline</p>
+          <div class="metric-toggle" data-chart-toggle="{esc(chart_id)}">
+            <button type="button" class="metric-btn {'active' if metric == 'median_unit_price' else ''}" data-metric="median">中位數</button>
+            <button type="button" class="metric-btn {'active' if metric != 'median_unit_price' else ''}" data-metric="avg">平均數</button>
+          </div>
         </div>
         <div class="legend legend-buttons">{"".join(legends)}</div>
       </div>
@@ -156,7 +162,7 @@ def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
         {''.join(series_blocks)}
         {''.join(x_labels)}
       </svg>
-      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱。X 軸日期已做抽樣顯示，避免全部擠在一起。實心點代表該月份含真實樣本，空心點代表目前只有 baseline 補點。</p>
+      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；也可切換看中位數 / 平均數。X 軸日期已做抽樣顯示，避免全部擠在一起。實心點代表該月份含真實樣本，空心點代表目前只有 baseline 補點。</p>
     </div>
     '''
 
@@ -309,7 +315,7 @@ def main():
                 pts = [s for s in series_export if s['community'] == focus_name and s['layout_type'] == default_layout]
                 if pts:
                     series_map[focus_name] = pts
-            chart_blocks.append(svg_line_chart(series_map, f'摩納哥周邊 {default_layout} 平均單價走勢', 'monaco-nearby-2room'))
+            chart_blocks.append('<div class="chart-switcher" data-chart-root="monaco-nearby-2room">' + svg_line_chart(series_map, f"摩納哥周邊 {default_layout} 中位單價走勢", 'monaco-nearby-2room-median', metric='median_unit_price') + svg_line_chart(series_map, f"摩納哥周邊 {default_layout} 平均單價走勢", 'monaco-nearby-2room-avg', metric='avg_unit_price') + '</div>')
 
             monaco_sections.append(f"""
             <section>
@@ -538,6 +544,7 @@ def main():
     activateTab(savedTab);
     applyFilters();
     setupLegendToggles();
+    setupMetricToggles();
   </script>
 </body>
 </html>
