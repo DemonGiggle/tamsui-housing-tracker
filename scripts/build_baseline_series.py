@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import json
 import hashlib
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -8,14 +8,22 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / 'data' / 'observations.json'
 WATCHLIST_PATH = ROOT / 'data' / 'watchlist.json'
 
-START_MONTH = '2023-01'
-END_MONTH = '2026-03'
+DEFAULT_START_MONTH = '2023-01'
+DEFAULT_END_MONTH = '2026-03'
+DEFAULT_LAYOUTS = ['1房', '2房', '3房', '4房以上']
+BASELINE_SOURCE = 'public-baseline'
+BASELINE_NOTE = 'baseline-first 月序列基準點（依現有可用公開資訊與既有樣本整理，用於長期追蹤每月價位）'
+DEFAULT_REGION = '淡水'
 
 
 def load_json(path, fallback):
     if not path.exists():
         return fallback
     return json.loads(path.read_text())
+
+
+def save_json(path, data):
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
 
 
 def avg(values):
@@ -41,93 +49,137 @@ def month_to_date(month):
     return f'{month}-01'
 
 
+def normalize_layouts(watchlist):
+    layouts = [x for x in watchlist.get('layout_types', []) if x != '套房']
+    return layouts or list(DEFAULT_LAYOUTS)
+
+
+def collect_target_communities(watchlist):
+    communities = []
+    for item in watchlist.get('communities', []):
+        name = item.get('name')
+        if name:
+            communities.append(name)
+        communities.extend(item.get('nearby_communities', []))
+    return list(dict.fromkeys(communities))
+
+
+def parse_rooms(layout):
+    if layout == '4房以上':
+        return 4.0
+    if layout.endswith('房'):
+        try:
+            return float(layout.replace('房', ''))
+        except ValueError:
+            return 0.0
+    return 0.0
+
+
 def baseline_hash(community, layout, month):
     key = f'baseline|{community}|{layout}|{month}'
     return hashlib.sha256(key.encode()).hexdigest()[:16]
 
 
+def is_usable_anchor(row):
+    return bool(row.get('community')) and bool(row.get('unit_price', 0))
+
+
 def build_anchor_map(rows):
     anchors = defaultdict(list)
     for row in rows:
+        if not is_usable_anchor(row):
+            continue
         community = row.get('community')
         layout = row.get('layout_type') or '未分類'
-        unit_price = row.get('unit_price', 0)
-        total_price = row.get('total_price', 0)
-        size_ping = row.get('size_ping', 0)
-        if not community or not unit_price:
-            continue
         anchors[(community, layout)].append({
-            'unit_price': unit_price,
-            'total_price': total_price,
-            'size_ping': size_ping,
+            'unit_price': row.get('unit_price', 0),
+            'total_price': row.get('total_price', 0),
+            'size_ping': row.get('size_ping', 0),
             'building_age': row.get('building_age', 0),
         })
     return anchors
 
 
-def remove_old_baselines(rows):
-    return [r for r in rows if r.get('source') != 'public-baseline']
+def strip_existing_baselines(rows):
+    return [row for row in rows if row.get('source') != BASELINE_SOURCE]
 
 
-def main():
-    rows = load_json(DATA_PATH, [])
-    watch = load_json(WATCHLIST_PATH, {'communities': [], 'layout_types': []})
-    layouts = [x for x in watch.get('layout_types', []) if x != '套房'] or ['1房', '2房', '3房', '4房以上']
+def summarize_anchor_samples(samples):
+    return {
+        'unit_price': avg([x['unit_price'] for x in samples]),
+        'total_price': avg([x['total_price'] for x in samples]),
+        'size_ping': avg([x['size_ping'] for x in samples]),
+        'building_age': avg([x['building_age'] for x in samples]),
+    }
 
-    communities = []
-    for item in watch.get('communities', []):
-        name = item.get('name')
-        if name:
-            communities.append(name)
-        communities.extend(item.get('nearby_communities', []))
-    communities = list(dict.fromkeys(communities))
 
-    kept_rows = remove_old_baselines(rows)
-    anchors = build_anchor_map(kept_rows)
-    months = month_range(START_MONTH, END_MONTH)
+def make_baseline_row(community, layout, month, anchor_summary):
+    return {
+        'observed_at': month_to_date(month),
+        'observed_month': month,
+        'type': 'seed',
+        'region': DEFAULT_REGION,
+        'community': community,
+        'layout_type': layout,
+        'rooms': parse_rooms(layout),
+        'source': BASELINE_SOURCE,
+        'source_type': 'baseline',
+        'source_url': '',
+        'total_price': anchor_summary['total_price'],
+        'unit_price': anchor_summary['unit_price'],
+        'size_ping': anchor_summary['size_ping'],
+        'building_age': anchor_summary['building_age'],
+        'parking': False,
+        'address_text': '',
+        'floor_text': '',
+        'note': BASELINE_NOTE,
+        'raw_hash': baseline_hash(community, layout, month),
+    }
 
+
+def build_baseline_rows(communities, layouts, months, anchors):
     new_rows = []
     for community in communities:
         for layout in layouts:
             samples = anchors.get((community, layout), [])
             if not samples:
                 continue
-            unit_price = avg([x['unit_price'] for x in samples])
-            total_price = avg([x['total_price'] for x in samples])
-            size_ping = avg([x['size_ping'] for x in samples])
-            building_age = avg([x['building_age'] for x in samples])
-            rooms = 4.0 if layout == '4房以上' else float(layout.replace('房', '')) if layout.endswith('房') else 0.0
+            anchor_summary = summarize_anchor_samples(samples)
             for month in months:
-                new_rows.append({
-                    'observed_at': month_to_date(month),
-                    'observed_month': month,
-                    'type': 'seed',
-                    'region': '淡水',
-                    'community': community,
-                    'layout_type': layout,
-                    'rooms': rooms,
-                    'source': 'public-baseline',
-                    'source_type': 'baseline',
-                    'source_url': '',
-                    'total_price': total_price,
-                    'unit_price': unit_price,
-                    'size_ping': size_ping,
-                    'building_age': building_age,
-                    'parking': False,
-                    'address_text': '',
-                    'floor_text': '',
-                    'note': 'baseline-first 月序列基準點（依現有可用公開資訊與既有樣本整理，用於長期追蹤每月價位）',
-                    'raw_hash': baseline_hash(community, layout, month),
-                })
+                new_rows.append(make_baseline_row(community, layout, month, anchor_summary))
+    return new_rows
 
-    merged = kept_rows + new_rows
-    merged.sort(key=lambda r: (r.get('observed_at', ''), r.get('community', ''), r.get('layout_type', ''), r.get('raw_hash', '')))
-    DATA_PATH.write_text(json.dumps(merged, ensure_ascii=False, indent=2) + '\n')
+
+def sort_rows(rows):
+    rows.sort(key=lambda row: (
+        row.get('observed_at', ''),
+        row.get('community', ''),
+        row.get('layout_type', ''),
+        row.get('raw_hash', ''),
+    ))
+    return rows
+
+
+def main():
+    rows = load_json(DATA_PATH, [])
+    watchlist = load_json(WATCHLIST_PATH, {'communities': [], 'layout_types': []})
+
+    layouts = normalize_layouts(watchlist)
+    communities = collect_target_communities(watchlist)
+    months = month_range(DEFAULT_START_MONTH, DEFAULT_END_MONTH)
+
+    kept_rows = strip_existing_baselines(rows)
+    anchors = build_anchor_map(kept_rows)
+    baseline_rows = build_baseline_rows(communities, layouts, months, anchors)
+
+    merged_rows = sort_rows(kept_rows + baseline_rows)
+    save_json(DATA_PATH, merged_rows)
+
     print(json.dumps({
         'ok': True,
         'kept_rows': len(kept_rows),
-        'baseline_rows': len(new_rows),
-        'total_rows': len(merged),
+        'baseline_rows': len(baseline_rows),
+        'total_rows': len(merged_rows),
         'communities': communities,
         'layouts': layouts,
         'months': len(months),
