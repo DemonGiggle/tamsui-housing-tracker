@@ -25,7 +25,9 @@ Track long-term price trends for:
 - `data/observations.json` — raw observation log
 - `data/watchlist.json` — watched regions/communities/layout types/nearby communities
 - `scripts/add_observation.py` — append one observation
+- `scripts/import_real_samples.py` — import verifiable public samples from lightweight public sources
 - `scripts/build_dashboard.py` — generate static dashboard HTML
+- `scripts/update_all.py` — canonical pipeline entrypoint; can optionally run public-source import first
 - `docs/index.html` — generated dashboard
 
 ## Current watched nearby communities
@@ -60,10 +62,22 @@ python3 scripts/add_observation.py \
   --note "Example observation"
 ```
 
-Rebuild dashboard:
+Rebuild dashboard only:
 
 ```bash
 python3 scripts/build_dashboard.py
+```
+
+Run the canonical refresh pipeline:
+
+```bash
+python3 scripts/update_all.py
+```
+
+Run importer first, then rebuild everything:
+
+```bash
+python3 scripts/update_all.py --import-real
 ```
 
 ## Notes

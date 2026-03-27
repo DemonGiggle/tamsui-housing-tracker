@@ -8246,6 +8246,22 @@
   },
   {
     "community": "清淞",
+    "layout_type": "1房",
+    "month": "2026-03",
+    "sample_count": 2,
+    "avg_unit_price": 47.85,
+    "median_unit_price": 47.85,
+    "min_unit_price": 44.4,
+    "max_unit_price": 51.3,
+    "avg_total_price": 688.0,
+    "sources": [
+      "buy.houseprice.tw"
+    ],
+    "has_real": true,
+    "has_baseline": false
+  },
+  {
+    "community": "清淞",
     "layout_type": "2房",
     "month": "2023-01",
     "sample_count": 1,
@@ -8841,16 +8857,17 @@
     "community": "清淞",
     "layout_type": "2房",
     "month": "2026-03",
-    "sample_count": 1,
-    "avg_unit_price": 32.4,
-    "median_unit_price": 32.4,
+    "sample_count": 2,
+    "avg_unit_price": 35.25,
+    "median_unit_price": 35.25,
     "min_unit_price": 32.4,
-    "max_unit_price": 32.4,
-    "avg_total_price": 1037.0,
+    "max_unit_price": 38.1,
+    "avg_total_price": 1407.5,
     "sources": [
+      "buy.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
