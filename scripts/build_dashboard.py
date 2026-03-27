@@ -16,10 +16,21 @@ def load_json(path, fallback):
 
 
 def avg(values):
-    vals = [v for v in values if isinstance(v, (int, float)) and v > 0]
+    vals = [float(v) for v in values if isinstance(v, (int, float)) and v > 0]
     if not vals:
         return 0
     return sum(vals) / len(vals)
+
+
+def median(values):
+    vals = sorted(float(v) for v in values if isinstance(v, (int, float)) and v > 0)
+    if not vals:
+        return 0
+    n = len(vals)
+    mid = n // 2
+    if n % 2:
+        return vals[mid]
+    return (vals[mid - 1] + vals[mid]) / 2
 
 
 def esc(value):
@@ -53,10 +64,15 @@ def main():
     rows = load_json(DATA_PATH, [])
     watchlist = load_json(WATCHLIST_PATH, {'regions': [], 'communities': [], 'layout_types': []})
 
+    for row in rows:
+        if not row.get('observed_month') and row.get('observed_at'):
+            row['observed_month'] = str(row['observed_at'])[:7]
+
     by_region = defaultdict(list)
     by_community = defaultdict(list)
     by_layout = defaultdict(list)
     by_community_layout = defaultdict(list)
+    by_series = defaultdict(list)
     for row in rows:
         if row.get('region'):
             by_region[row['region']].append(row)
@@ -66,6 +82,7 @@ def main():
         by_layout[layout].append(row)
         if row.get('community'):
             by_community_layout[(row['community'], layout)].append(row)
+            by_series[(row['community'], layout, row.get('observed_month', ''))].append(row)
 
     region_cards = []
     for region in sorted(by_region):
@@ -93,7 +110,7 @@ def main():
 
     community_rows = []
     for community in sorted(by_community):
-        items = by_community[community]
+        items = sorted(by_community[community], key=lambda x: x.get('observed_at', ''))
         last = items[-1]
         community_rows.append(
             f"<tr><td>{esc(community)}</td><td>{esc(last.get('region',''))}</td><td>{esc(last.get('layout_type','未分類'))}</td><td>{avg([x.get('unit_price', 0) for x in items]):.2f}</td><td>{len(items)}</td><td>{esc(last.get('observed_at',''))}</td></tr>"
@@ -103,20 +120,30 @@ def main():
     for community in sorted(by_community):
         layouts = sorted({r.get('layout_type') or '未分類' for r in by_community[community]})
         for layout in layouts:
-            items = by_community_layout[(community, layout)]
-            last = sorted(items, key=lambda x: x.get('observed_at', ''))[-1]
+            items = sorted(by_community_layout[(community, layout)], key=lambda x: x.get('observed_at', ''))
+            last = items[-1]
             layout_detail_rows.append(
                 f"<tr><td>{esc(community)}</td><td>{esc(layout)}</td><td>{len(items)}</td><td>{avg([x.get('unit_price', 0) for x in items]):.2f}</td><td>{avg([x.get('total_price', 0) for x in items]):.1f}</td><td>{esc(last.get('observed_at',''))}</td><td>{esc(last.get('source',''))}</td></tr>"
             )
 
+    series_rows = []
+    for (community, layout, month), items in sorted(by_series.items()):
+        unit_prices = [x.get('unit_price', 0) for x in items]
+        total_prices = [x.get('total_price', 0) for x in items]
+        sources = ', '.join(sorted({x.get('source', '') for x in items if x.get('source')}))
+        series_rows.append(
+            f"<tr><td>{esc(community)}</td><td>{esc(layout)}</td><td>{esc(month)}</td><td>{len(items)}</td><td>{avg(unit_prices):.2f}</td><td>{median(unit_prices):.2f}</td><td>{min([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{max([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{avg(total_prices):.1f}</td><td>{esc(sources)}</td></tr>"
+        )
+
     latest_rows = []
-    for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:40]:
+    for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:60]:
         latest_rows.append(
-            f"<tr><td>{esc(row.get('observed_at',''))}</td><td>{esc(row.get('region',''))}</td><td>{esc(row.get('community',''))}</td><td>{esc(row.get('layout_type','未分類'))}</td><td>{row.get('unit_price',0)}</td><td>{row.get('total_price',0)}</td><td>{esc(row.get('source',''))}</td><td>{esc(row.get('note',''))}</td></tr>"
+            f"<tr><td>{esc(row.get('observed_at',''))}</td><td>{esc(row.get('observed_month',''))}</td><td>{esc(row.get('region',''))}</td><td>{esc(row.get('community',''))}</td><td>{esc(row.get('layout_type','未分類'))}</td><td>{row.get('unit_price',0)}</td><td>{row.get('total_price',0)}</td><td>{esc(row.get('source',''))}</td><td>{esc(row.get('raw_hash',''))}</td></tr>"
         )
 
     watch_community_cards = []
     monaco_sections = []
+    monaco_series_rows = []
     for item in watchlist.get('communities', []):
         name = item.get('name', '')
         region = item.get('region', '')
@@ -140,10 +167,18 @@ def main():
         if name == '摩納哥社區':
             core_stats = summarize_rows(by_community.get(name, []))
             nearby_rows = []
+            focus_names = [name] + nearby
             for nearby_name in nearby:
                 stats = summarize_rows(by_community.get(nearby_name, []))
                 nearby_rows.append(
                     f"<tr><td>{esc(nearby_name)}</td><td>{stats['count']}</td><td>{stats['avg_unit_price']:.2f}</td><td>{stats['latest'] or '—'}</td><td>{esc(stats['latest_layout'])}</td></tr>"
+                )
+            for (community, layout, month), items in sorted(by_series.items()):
+                if community not in focus_names:
+                    continue
+                unit_prices = [x.get('unit_price', 0) for x in items]
+                monaco_series_rows.append(
+                    f"<tr><td>{esc(community)}</td><td>{esc(layout)}</td><td>{esc(month)}</td><td>{len(items)}</td><td>{avg(unit_prices):.2f}</td><td>{median(unit_prices):.2f}</td></tr>"
                 )
             monaco_sections.append(f"""
             <section>
@@ -162,12 +197,17 @@ def main():
                   <div class=\"eyebrow\">周邊社區池</div>
                   <h3>地理附近社區</h3>
                   <div class=\"chips\">{nearby_html}</div>
-                  <p class=\"muted\">先把摩納哥與周邊街廓一起追蹤，之後再慢慢累積成自己的在地資料庫。</p>
+                  <p class=\"muted\">追蹤方向已從單筆物件，改成「社區 × 房型 × 月份」的長期價格序列。</p>
                 </div>
               </div>
               <table>
                 <thead><tr><th>周邊社區</th><th>樣本數</th><th>平均單價</th><th>最近觀察</th><th>最近房型</th></tr></thead>
                 <tbody>{''.join(nearby_rows) or '<tr><td colspan="5">尚無周邊資料</td></tr>'}</tbody>
+              </table>
+              <h3>摩納哥與周邊社區房型月度序列</h3>
+              <table>
+                <thead><tr><th>社區</th><th>房型</th><th>月份</th><th>樣本數</th><th>平均單價</th><th>中位單價</th></tr></thead>
+                <tbody>{''.join(monaco_series_rows) or '<tr><td colspan="6">尚無月度序列資料</td></tr>'}</tbody>
               </table>
             </section>
             """)
@@ -180,7 +220,7 @@ def main():
   <title>淡水房市追蹤 MVP</title>
   <style>
     body {{ font-family: system-ui, sans-serif; margin: 0; background: #f7f8fb; color: #1f2937; }}
-    .wrap {{ max-width: 1100px; margin: 0 auto; padding: 20px; }}
+    .wrap {{ max-width: 1180px; margin: 0 auto; padding: 20px; }}
     .hero {{ background: white; border-radius: 16px; padding: 20px; box-shadow: 0 6px 18px rgba(0,0,0,.06); }}
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }}
     .card {{ background: white; border-radius: 14px; padding: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.05); }}
@@ -195,17 +235,22 @@ def main():
     th {{ background: #eef2ff; }}
     .muted {{ color: #6b7280; }}
     code {{ background: #eef2ff; padding: 2px 6px; border-radius: 6px; }}
+    @media (max-width: 720px) {{
+      .wrap {{ padding: 14px; }}
+      th, td {{ font-size: 13px; padding: 8px; }}
+    }}
   </style>
 </head>
 <body>
   <div class=\"wrap\">
     <section class=\"hero\">
       <h1>淡水房市追蹤 MVP</h1>
-      <p class=\"muted\">先把資料累積起來，再慢慢長成長期走勢圖、社區比較、提醒系統。</p>
+      <p class=\"muted\">目標已明確化：追蹤每個社區、每個房型，在長時間內的價格變化。</p>
       <p>目前觀察區域：{', '.join(esc(x) for x in watchlist.get('regions', []))}</p>
       <p>房型分類：{', '.join(esc(x) for x in watchlist.get('layout_types', []))}</p>
-      <p>資料筆數：<strong>{len(rows)}</strong></p>
-      <p class=\"muted\">重點：每坪單價要搭配房型一起看，也要搭配附近社區一起看。</p>
+      <p>原始資料筆數：<strong>{len(rows)}</strong></p>
+      <p>月度序列筆數：<strong>{len(by_series)}</strong></p>
+      <p class=\"muted\">raw 保留原始 observation；真正看趨勢時，用「社區 × 房型 × 月份」聚合。</p>
     </section>
 
     {''.join(monaco_sections)}
@@ -242,10 +287,18 @@ def main():
     </section>
 
     <section>
-      <h2>最新觀察</h2>
+      <h2>社區 × 房型 × 月份 價格序列</h2>
       <table>
-        <thead><tr><th>日期</th><th>區域</th><th>社區</th><th>房型</th><th>單價(萬/坪)</th><th>總價(萬)</th><th>來源</th><th>備註</th></tr></thead>
-        <tbody>{''.join(latest_rows) or '<tr><td colspan="8">尚無資料</td></tr>'}</tbody>
+        <thead><tr><th>社區</th><th>房型</th><th>月份</th><th>樣本數</th><th>平均單價</th><th>中位單價</th><th>最低單價</th><th>最高單價</th><th>平均總價</th><th>來源</th></tr></thead>
+        <tbody>{''.join(series_rows) or '<tr><td colspan="10">尚無月度序列資料</td></tr>'}</tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>最新原始 observations</h2>
+      <table>
+        <thead><tr><th>日期</th><th>月份</th><th>區域</th><th>社區</th><th>房型</th><th>單價</th><th>總價</th><th>來源</th><th>raw hash</th></tr></thead>
+        <tbody>{''.join(latest_rows) or '<tr><td colspan="9">尚無資料</td></tr>'}</tbody>
       </table>
     </section>
 
@@ -255,7 +308,7 @@ def main():
         <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄，可信度高於 baseline。</li>
         <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
         <li>目前摩納哥、托斯卡尼麥迪奇名家、尚海、高第、清淞、荷雅名人館、荷雅時尚館已有多筆公開頁明細；水立方、托斯卡尼翡冷翠仍有部分 baseline 佔比較高，後續會繼續補正。</li>
-        <li>之後若補到更精確的待售/成交資訊，可以直接新增，不需要刪掉舊資料。</li>
+        <li><strong>raw_hash</strong> 用來避免同一批原始 observation 被重複匯入；但真正看的重點已改成月度聚合序列。</li>
       </ul>
     </section>
   </div>

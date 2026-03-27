@@ -1,0 +1,730 @@
+[
+  {
+    "community": "尚海",
+    "layout_type": "2房",
+    "observed_month": "2025-03",
+    "sample_count": 1,
+    "avg_unit_price": 47.0,
+    "median_unit_price": 47.0,
+    "min_unit_price": 47.0,
+    "max_unit_price": 47.0,
+    "avg_total_price": 1110.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "2房",
+    "observed_month": "2025-04",
+    "sample_count": 1,
+    "avg_unit_price": 45.0,
+    "median_unit_price": 45.0,
+    "min_unit_price": 45.0,
+    "max_unit_price": 45.0,
+    "avg_total_price": 1167.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 41.3,
+    "median_unit_price": 41.3,
+    "min_unit_price": 41.3,
+    "max_unit_price": 41.3,
+    "avg_total_price": 1240.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "3房",
+    "observed_month": "2025-05",
+    "sample_count": 1,
+    "avg_unit_price": 38.6,
+    "median_unit_price": 38.6,
+    "min_unit_price": 38.6,
+    "max_unit_price": 38.6,
+    "avg_total_price": 1800.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "3房",
+    "observed_month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 42.3,
+    "median_unit_price": 42.3,
+    "min_unit_price": 42.3,
+    "max_unit_price": 42.3,
+    "avg_total_price": 1230.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 41.3,
+    "median_unit_price": 41.3,
+    "min_unit_price": 41.3,
+    "max_unit_price": 41.3,
+    "avg_total_price": 1817.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "尚海",
+    "layout_type": "4房以上",
+    "observed_month": "2024-08",
+    "sample_count": 1,
+    "avg_unit_price": 40.4,
+    "median_unit_price": 40.4,
+    "min_unit_price": 40.4,
+    "max_unit_price": 40.4,
+    "avg_total_price": 3000.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 37.4,
+    "median_unit_price": 37.4,
+    "min_unit_price": 37.4,
+    "max_unit_price": 37.4,
+    "avg_total_price": 944.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 37.4,
+    "median_unit_price": 37.4,
+    "min_unit_price": 37.4,
+    "max_unit_price": 37.4,
+    "avg_total_price": 1640.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "1房",
+    "observed_month": "2024-03",
+    "sample_count": 1,
+    "avg_unit_price": 31.8,
+    "median_unit_price": 31.8,
+    "min_unit_price": 31.8,
+    "max_unit_price": 31.8,
+    "avg_total_price": 1145.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "2房",
+    "observed_month": "2025-11",
+    "sample_count": 2,
+    "avg_unit_price": 33.05,
+    "median_unit_price": 33.05,
+    "min_unit_price": 30.5,
+    "max_unit_price": 35.6,
+    "avg_total_price": 1140.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 35.8,
+    "median_unit_price": 35.8,
+    "min_unit_price": 35.8,
+    "max_unit_price": 35.8,
+    "avg_total_price": 2050.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "3房",
+    "observed_month": "2023-06",
+    "sample_count": 1,
+    "avg_unit_price": 31.3,
+    "median_unit_price": 31.3,
+    "min_unit_price": 31.3,
+    "max_unit_price": 31.3,
+    "avg_total_price": 1505.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "3房",
+    "observed_month": "2023-08",
+    "sample_count": 1,
+    "avg_unit_price": 31.4,
+    "median_unit_price": 31.4,
+    "min_unit_price": 31.4,
+    "max_unit_price": 31.4,
+    "avg_total_price": 1650.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "摩納哥社區",
+    "layout_type": "1房",
+    "observed_month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 42.5,
+    "median_unit_price": 42.5,
+    "min_unit_price": 42.5,
+    "max_unit_price": 42.5,
+    "avg_total_price": 618.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "摩納哥社區",
+    "layout_type": "2房",
+    "observed_month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 50.6,
+    "median_unit_price": 50.6,
+    "min_unit_price": 50.6,
+    "max_unit_price": 50.6,
+    "avg_total_price": 1270.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "摩納哥社區",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 43.6,
+    "median_unit_price": 43.6,
+    "min_unit_price": 43.6,
+    "max_unit_price": 43.6,
+    "avg_total_price": 1298.0,
+    "sources": [
+      "manual"
+    ]
+  },
+  {
+    "community": "摩納哥社區",
+    "layout_type": "3房",
+    "observed_month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 38.3,
+    "median_unit_price": 38.3,
+    "min_unit_price": 38.3,
+    "max_unit_price": 38.3,
+    "avg_total_price": 1500.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "水立方",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 37.6,
+    "median_unit_price": 37.6,
+    "min_unit_price": 37.6,
+    "max_unit_price": 37.6,
+    "avg_total_price": 1650.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "水立方",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 37.6,
+    "median_unit_price": 37.6,
+    "min_unit_price": 37.6,
+    "max_unit_price": 37.6,
+    "avg_total_price": 2100.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "1房",
+    "observed_month": "2025-09",
+    "sample_count": 1,
+    "avg_unit_price": 48.0,
+    "median_unit_price": 48.0,
+    "min_unit_price": 48.0,
+    "max_unit_price": 48.0,
+    "avg_total_price": 950.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "1房",
+    "observed_month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 28.8,
+    "median_unit_price": 28.8,
+    "min_unit_price": 28.8,
+    "max_unit_price": 28.8,
+    "avg_total_price": 730.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "1房",
+    "observed_month": "2026-01",
+    "sample_count": 2,
+    "avg_unit_price": 40.6,
+    "median_unit_price": 40.6,
+    "min_unit_price": 37.8,
+    "max_unit_price": 43.4,
+    "avg_total_price": 669.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "2房",
+    "observed_month": "2025-04",
+    "sample_count": 1,
+    "avg_unit_price": 32.8,
+    "median_unit_price": 32.8,
+    "min_unit_price": 32.8,
+    "max_unit_price": 32.8,
+    "avg_total_price": 1302.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "2房",
+    "observed_month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 33.2,
+    "median_unit_price": 33.2,
+    "min_unit_price": 33.2,
+    "max_unit_price": 33.2,
+    "avg_total_price": 1070.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 32.4,
+    "median_unit_price": 32.4,
+    "min_unit_price": 32.4,
+    "max_unit_price": 32.4,
+    "avg_total_price": 1037.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "清淞",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 32.4,
+    "median_unit_price": 32.4,
+    "min_unit_price": 32.4,
+    "max_unit_price": 32.4,
+    "avg_total_price": 1426.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "示例社區",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 39.8,
+    "median_unit_price": 39.8,
+    "min_unit_price": 39.8,
+    "max_unit_price": 39.8,
+    "avg_total_price": 1388.0,
+    "sources": [
+      "manual"
+    ]
+  },
+  {
+    "community": "示例社區 B",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 52.4,
+    "median_unit_price": 52.4,
+    "min_unit_price": 52.4,
+    "max_unit_price": 52.4,
+    "avg_total_price": 1680.0,
+    "sources": [
+      "manual"
+    ]
+  },
+  {
+    "community": "示例社區C",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 46.2,
+    "median_unit_price": 46.2,
+    "min_unit_price": 46.2,
+    "max_unit_price": 46.2,
+    "avg_total_price": 1520.0,
+    "sources": [
+      "manual"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "1房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 34.8,
+    "median_unit_price": 34.8,
+    "min_unit_price": 34.8,
+    "max_unit_price": 34.8,
+    "avg_total_price": 540.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "2房",
+    "observed_month": "2021-12",
+    "sample_count": 1,
+    "avg_unit_price": 27.8,
+    "median_unit_price": 27.8,
+    "min_unit_price": 27.8,
+    "max_unit_price": 27.8,
+    "avg_total_price": 1050.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "2房",
+    "observed_month": "2024-09",
+    "sample_count": 1,
+    "avg_unit_price": 42.9,
+    "median_unit_price": 42.9,
+    "min_unit_price": 42.9,
+    "max_unit_price": 42.9,
+    "avg_total_price": 1370.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "3房",
+    "observed_month": "2024-11",
+    "sample_count": 1,
+    "avg_unit_price": 29.4,
+    "median_unit_price": 29.4,
+    "min_unit_price": 29.4,
+    "max_unit_price": 29.4,
+    "avg_total_price": 1620.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "3房",
+    "observed_month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 34.8,
+    "median_unit_price": 34.8,
+    "min_unit_price": 34.8,
+    "max_unit_price": 34.8,
+    "avg_total_price": 1780.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 34.8,
+    "median_unit_price": 34.8,
+    "min_unit_price": 34.8,
+    "max_unit_price": 34.8,
+    "avg_total_price": 3628.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "荷雅名人館",
+    "layout_type": "4房以上",
+    "observed_month": "2023-12",
+    "sample_count": 1,
+    "avg_unit_price": 25.3,
+    "median_unit_price": 25.3,
+    "min_unit_price": 25.3,
+    "max_unit_price": 25.3,
+    "avg_total_price": 2030.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "1房",
+    "observed_month": "2024-04",
+    "sample_count": 1,
+    "avg_unit_price": 36.4,
+    "median_unit_price": 36.4,
+    "min_unit_price": 36.4,
+    "max_unit_price": 36.4,
+    "avg_total_price": 895.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "1房",
+    "observed_month": "2024-05",
+    "sample_count": 1,
+    "avg_unit_price": 35.4,
+    "median_unit_price": 35.4,
+    "min_unit_price": 35.4,
+    "max_unit_price": 35.4,
+    "avg_total_price": 968.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "2房",
+    "observed_month": "2023-06",
+    "sample_count": 1,
+    "avg_unit_price": 33.4,
+    "median_unit_price": 33.4,
+    "min_unit_price": 33.4,
+    "max_unit_price": 33.4,
+    "avg_total_price": 990.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "2房",
+    "observed_month": "2023-12",
+    "sample_count": 1,
+    "avg_unit_price": 31.3,
+    "median_unit_price": 31.3,
+    "min_unit_price": 31.3,
+    "max_unit_price": 31.3,
+    "avg_total_price": 972.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 36.2,
+    "median_unit_price": 36.2,
+    "min_unit_price": 36.2,
+    "max_unit_price": 36.2,
+    "avg_total_price": 1298.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "3房",
+    "observed_month": "2023-10",
+    "sample_count": 1,
+    "avg_unit_price": 29.7,
+    "median_unit_price": 29.7,
+    "min_unit_price": 29.7,
+    "max_unit_price": 29.7,
+    "avg_total_price": 1430.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "3房",
+    "observed_month": "2024-04",
+    "sample_count": 1,
+    "avg_unit_price": 36.8,
+    "median_unit_price": 36.8,
+    "min_unit_price": 36.8,
+    "max_unit_price": 36.8,
+    "avg_total_price": 1600.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "荷雅時尚館",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 36.2,
+    "median_unit_price": 36.2,
+    "min_unit_price": 36.2,
+    "max_unit_price": 36.2,
+    "avg_total_price": 1798.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "1房",
+    "observed_month": "2024-08",
+    "sample_count": 1,
+    "avg_unit_price": 38.3,
+    "median_unit_price": 38.3,
+    "min_unit_price": 38.3,
+    "max_unit_price": 38.3,
+    "avg_total_price": 530.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "2房",
+    "observed_month": "2023-11",
+    "sample_count": 1,
+    "avg_unit_price": 39.2,
+    "median_unit_price": 39.2,
+    "min_unit_price": 39.2,
+    "max_unit_price": 39.2,
+    "avg_total_price": 938.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "2房",
+    "observed_month": "2025-05",
+    "sample_count": 1,
+    "avg_unit_price": 41.6,
+    "median_unit_price": 41.6,
+    "min_unit_price": 41.6,
+    "max_unit_price": 41.6,
+    "avg_total_price": 1020.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "2房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 38.3,
+    "median_unit_price": 38.3,
+    "min_unit_price": 38.3,
+    "max_unit_price": 38.3,
+    "avg_total_price": 1149.0,
+    "sources": [
+      "public-baseline"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "3房",
+    "observed_month": "2023-06",
+    "sample_count": 1,
+    "avg_unit_price": 34.8,
+    "median_unit_price": 34.8,
+    "min_unit_price": 34.8,
+    "max_unit_price": 34.8,
+    "avg_total_price": 1480.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "3房",
+    "observed_month": "2023-07",
+    "sample_count": 1,
+    "avg_unit_price": 30.2,
+    "median_unit_price": 30.2,
+    "min_unit_price": 30.2,
+    "max_unit_price": 30.2,
+    "avg_total_price": 1200.0,
+    "sources": [
+      "community.houseprice.tw"
+    ]
+  },
+  {
+    "community": "高第",
+    "layout_type": "3房",
+    "observed_month": "2026-03",
+    "sample_count": 1,
+    "avg_unit_price": 38.3,
+    "median_unit_price": 38.3,
+    "min_unit_price": 38.3,
+    "max_unit_price": 38.3,
+    "avg_total_price": 1647.0,
+    "sources": [
+      "public-baseline"
+    ]
+  }
+]

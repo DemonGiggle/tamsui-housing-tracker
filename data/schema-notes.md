@@ -1,31 +1,60 @@
 # Schema Notes
 
-Each observation row currently supports:
+## Current direction
 
-- `observed_at`: date string
-- `type`: seed / listing / transaction / manual-note
-- `region`: area name in Tamsui
-- `community`: community/building name
-- `layout_type`: 套房 / 1房 / 2房 / 3房 / 4房以上
-- `rooms`: optional numeric room count
-- `source`: manual / 591 / realprice / etc
-- `total_price`: total price in 萬
-- `unit_price`: price per ping in 萬/坪
-- `size_ping`: indoor/building size in 坪
-- `building_age`: years
-- `parking`: true/false
-- `note`: free text
+This tracker is **not primarily a single-listing dedup database**.
+The main goal is to build a long-term price series for:
 
-Watchlist community object can also include:
+- each `community`
+- each `layout_type`
+- across time (`observed_month`)
 
-- `name`: focal community name
-- `region`: area name
-- `priority`: high / medium / low
-- `notes`: why it matters
-- `nearby_communities`: nearby comparable communities for local comparison
+So the recommended mental model is:
 
-Why this matters:
+1. Keep raw observations
+2. Aggregate into monthly series for analysis
+3. Use filtering/views later instead of prematurely throwing data away
 
-- 套房、兩房、三房的單價常常不在同一個比較基準
-- 同時，社區也不能只孤立看，附近可比社區常常更有參考價值
-- MVP 起步時，先做簡單房型分組 + 周邊社區清單，比直接混合平均更合理
+## Observation fields
+
+- `observed_at`: raw observation date (`YYYY-MM-DD` preferred)
+- `observed_month`: derived month bucket (`YYYY-MM`)
+- `type`: `listing` / `seed` / other future event types
+- `region`
+- `community`
+- `layout_type`
+- `rooms`
+- `source`
+- `source_type`: e.g. `listing`, `baseline`
+- `source_url`: optional original page URL
+- `address_text`: optional source address text
+- `floor_text`: optional floor text
+- `total_price`
+- `unit_price`
+- `size_ping`
+- `building_age`
+- `parking`
+- `note`
+- `raw_hash`: import-level fingerprint to avoid importing the exact same raw observation twice
+
+## Dedup rule
+
+Do **not** use `total_price` / `unit_price` as identity keys for properties over time.
+Prices are expected to change.
+
+Instead:
+- use `raw_hash` only to block exact duplicate imports
+- keep multiple observations for the same community/layout across time
+- aggregate at `community + layout_type + observed_month`
+
+## Analysis target
+
+Main analysis should use monthly grouped metrics like:
+
+- sample count
+- average unit price
+- median unit price
+- min/max unit price
+- average total price
+
+These monthly grouped series are the real product.
