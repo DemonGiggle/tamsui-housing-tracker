@@ -56,6 +56,7 @@ def main():
     by_region = defaultdict(list)
     by_community = defaultdict(list)
     by_layout = defaultdict(list)
+    by_community_layout = defaultdict(list)
     for row in rows:
         if row.get('region'):
             by_region[row['region']].append(row)
@@ -63,6 +64,8 @@ def main():
             by_community[row['community']].append(row)
         layout = row.get('layout_type') or '未分類'
         by_layout[layout].append(row)
+        if row.get('community'):
+            by_community_layout[(row['community'], layout)].append(row)
 
     region_cards = []
     for region in sorted(by_region):
@@ -96,10 +99,20 @@ def main():
             f"<tr><td>{esc(community)}</td><td>{esc(last.get('region',''))}</td><td>{esc(last.get('layout_type','未分類'))}</td><td>{avg([x.get('unit_price', 0) for x in items]):.2f}</td><td>{len(items)}</td><td>{esc(last.get('observed_at',''))}</td></tr>"
         )
 
+    layout_detail_rows = []
+    for community in sorted(by_community):
+        layouts = sorted({r.get('layout_type') or '未分類' for r in by_community[community]})
+        for layout in layouts:
+            items = by_community_layout[(community, layout)]
+            last = sorted(items, key=lambda x: x.get('observed_at', ''))[-1]
+            layout_detail_rows.append(
+                f"<tr><td>{esc(community)}</td><td>{esc(layout)}</td><td>{len(items)}</td><td>{avg([x.get('unit_price', 0) for x in items]):.2f}</td><td>{avg([x.get('total_price', 0) for x in items]):.1f}</td><td>{esc(last.get('observed_at',''))}</td><td>{esc(last.get('source',''))}</td></tr>"
+            )
+
     latest_rows = []
-    for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:20]:
+    for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:40]:
         latest_rows.append(
-            f"<tr><td>{esc(row.get('observed_at',''))}</td><td>{esc(row.get('region',''))}</td><td>{esc(row.get('community',''))}</td><td>{esc(row.get('layout_type','未分類'))}</td><td>{row.get('unit_price',0)}</td><td>{row.get('total_price',0)}</td><td>{esc(row.get('note',''))}</td></tr>"
+            f"<tr><td>{esc(row.get('observed_at',''))}</td><td>{esc(row.get('region',''))}</td><td>{esc(row.get('community',''))}</td><td>{esc(row.get('layout_type','未分類'))}</td><td>{row.get('unit_price',0)}</td><td>{row.get('total_price',0)}</td><td>{esc(row.get('source',''))}</td><td>{esc(row.get('note',''))}</td></tr>"
         )
 
     watch_community_cards = []
@@ -178,7 +191,7 @@ def main():
     .nearby-block {{ margin-top: 12px; }}
     .eyebrow {{ font-size: 12px; color: #6366f1; font-weight: 700; letter-spacing: .04em; margin-bottom: 8px; }}
     table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; margin-top: 16px; }}
-    th, td {{ text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }}
+    th, td {{ text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; vertical-align: top; }}
     th {{ background: #eef2ff; }}
     .muted {{ color: #6b7280; }}
     code {{ background: #eef2ff; padding: 2px 6px; border-radius: 6px; }}
@@ -192,7 +205,7 @@ def main():
       <p>目前觀察區域：{', '.join(esc(x) for x in watchlist.get('regions', []))}</p>
       <p>房型分類：{', '.join(esc(x) for x in watchlist.get('layout_types', []))}</p>
       <p>資料筆數：<strong>{len(rows)}</strong></p>
-      <p class=\"muted\">重點：每坪單價要搭配房型一起看，也要搭配附近可比社區一起看。</p>
+      <p class=\"muted\">重點：每坪單價要搭配房型一起看，也要搭配附近社區一起看。</p>
     </section>
 
     {''.join(monaco_sections)}
@@ -221,19 +234,27 @@ def main():
     </section>
 
     <section>
+      <h2>社區 × 房型明細</h2>
+      <table>
+        <thead><tr><th>社區</th><th>房型</th><th>樣本數</th><th>平均單價</th><th>平均總價</th><th>最近觀察</th><th>來源</th></tr></thead>
+        <tbody>{''.join(layout_detail_rows) or '<tr><td colspan="7">尚無房型資料</td></tr>'}</tbody>
+      </table>
+    </section>
+
+    <section>
       <h2>最新觀察</h2>
       <table>
-        <thead><tr><th>日期</th><th>區域</th><th>社區</th><th>房型</th><th>單價(萬/坪)</th><th>總價(萬)</th><th>備註</th></tr></thead>
-        <tbody>{''.join(latest_rows) or '<tr><td colspan="7">尚無資料</td></tr>'}</tbody>
+        <thead><tr><th>日期</th><th>區域</th><th>社區</th><th>房型</th><th>單價(萬/坪)</th><th>總價(萬)</th><th>來源</th><th>備註</th></tr></thead>
+        <tbody>{''.join(latest_rows) or '<tr><td colspan="8">尚無資料</td></tr>'}</tbody>
       </table>
     </section>
 
     <section class=\"card\">
-      <h2>下一步建議</h2>
+      <h2>資料說明</h2>
       <ul>
-        <li>優先補摩納哥與周邊社區的真實觀察資料</li>
-        <li>之後每筆資料都加上房型，讓單價比較更準</li>
-        <li>下一版可加「摩納哥 vs 周邊社區」圖表化比較</li>
+        <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄。</li>
+        <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
+        <li>之後若補到更精確的待售/成交資訊，可以直接新增，不需要刪掉舊資料。</li>
       </ul>
     </section>
   </div>
