@@ -30,12 +30,15 @@ Track long-term price trends for:
 
 ## Current watched nearby communities
 
-For the current first-pass geographic shortlist, Monaco (摩納哥社區) is paired with these nearby communities:
+For the current geography-first shortlist, Monaco (摩納哥社區) is paired with these nearby communities:
 - 水立方
 - 托斯卡尼翡冷翠
 - 托斯卡尼麥迪奇名家
 - 荷雅名人館
+- 荷雅時尚館
 - 尚海
+- 清淞
+- 高第
 
 This list is intentionally geography-first: nearby communities around the 淡金路38巷 / surrounding block area, used as a working local observation cluster.
 
