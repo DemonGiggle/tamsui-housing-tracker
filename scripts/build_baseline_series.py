@@ -113,7 +113,35 @@ def summarize_anchor_samples(samples):
     }
 
 
-def make_baseline_row(community, layout, month, anchor_summary):
+def collect_community_layout_map(anchors):
+    by_community = defaultdict(dict)
+    for (community, layout), samples in anchors.items():
+        by_community[community][layout] = summarize_anchor_samples(samples)
+    return by_community
+
+
+def fallback_anchor_summary(community, layout, community_layout_map, global_layout_map):
+    if layout in community_layout_map.get(community, {}):
+        return community_layout_map[community][layout], 'direct-layout-anchor'
+
+    same_community = list(community_layout_map.get(community, {}).values())
+    if same_community:
+        return summarize_anchor_samples(same_community), 'same-community-fallback'
+
+    layout_global = global_layout_map.get(layout, [])
+    if layout_global:
+        return summarize_anchor_samples(layout_global), 'same-layout-global-fallback'
+
+    all_global = []
+    for samples in global_layout_map.values():
+        all_global.extend(samples)
+    if all_global:
+        return summarize_anchor_samples(all_global), 'global-fallback'
+
+    return None, 'missing-anchor'
+
+
+def make_baseline_row(community, layout, month, anchor_summary, anchor_mode):
     return {
         'observed_at': month_to_date(month),
         'observed_month': month,
@@ -132,21 +160,29 @@ def make_baseline_row(community, layout, month, anchor_summary):
         'parking': False,
         'address_text': '',
         'floor_text': '',
-        'note': BASELINE_NOTE,
+        'note': f'{BASELINE_NOTE}；anchor={anchor_mode}',
         'raw_hash': baseline_hash(community, layout, month),
     }
 
 
+def build_global_layout_map(anchors):
+    global_layout_map = defaultdict(list)
+    for (_, layout), samples in anchors.items():
+        global_layout_map[layout].extend(samples)
+    return global_layout_map
+
+
 def build_baseline_rows(communities, layouts, months, anchors):
     new_rows = []
+    community_layout_map = collect_community_layout_map(anchors)
+    global_layout_map = build_global_layout_map(anchors)
     for community in communities:
         for layout in layouts:
-            samples = anchors.get((community, layout), [])
-            if not samples:
+            anchor_summary, anchor_mode = fallback_anchor_summary(community, layout, community_layout_map, global_layout_map)
+            if not anchor_summary:
                 continue
-            anchor_summary = summarize_anchor_samples(samples)
             for month in months:
-                new_rows.append(make_baseline_row(community, layout, month, anchor_summary))
+                new_rows.append(make_baseline_row(community, layout, month, anchor_summary, anchor_mode))
     return new_rows
 
 
