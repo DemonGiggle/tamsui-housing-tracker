@@ -16,8 +16,16 @@ Each observation row currently supports:
 - `parking`: true/false
 - `note`: free text
 
-Why `layout_type` matters:
+Watchlist community object can also include:
+
+- `name`: focal community name
+- `region`: area name
+- `priority`: high / medium / low
+- `notes`: why it matters
+- `nearby_communities`: nearby comparable communities for local comparison
+
+Why this matters:
 
 - 套房、兩房、三房的單價常常不在同一個比較基準
-- MVP 起步時，先做簡單房型分組，比直接混合平均更合理
-- 後續可以再細分成「小兩房 / 正兩房 / 三房車」等更實務分類
+- 同時，社區也不能只孤立看，附近可比社區常常更有參考價值
+- MVP 起步時，先做簡單房型分組 + 周邊社區清單，比直接混合平均更合理

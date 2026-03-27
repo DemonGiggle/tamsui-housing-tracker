@@ -26,6 +26,10 @@ def esc(value):
     return str(value or '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 
+def chip(text):
+    return f'<span class="chip">{esc(text)}</span>'
+
+
 def main():
     rows = load_json(DATA_PATH, [])
     watchlist = load_json(WATCHLIST_PATH, {'regions': [], 'communities': [], 'layout_types': []})
@@ -85,12 +89,18 @@ def main():
         region = item.get('region', '')
         priority = item.get('priority', '')
         notes = item.get('notes', '')
+        nearby = item.get('nearby_communities', [])
+        nearby_html = ''.join(chip(x) for x in nearby) or '<span class="muted">尚未補上附近社區</span>'
         watch_community_cards.append(f"""
         <div class=\"card priority-{esc(priority).lower()}\">
           <h3>{esc(name)}</h3>
           <p>區域：{esc(region)}</p>
           <p>優先級：{esc(priority)}</p>
           <p class=\"muted\">{esc(notes)}</p>
+          <div class=\"nearby-block\">
+            <strong>附近社區：</strong>
+            <div class=\"chips\">{nearby_html}</div>
+          </div>
         </div>
         """)
 
@@ -107,6 +117,9 @@ def main():
     .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }}
     .card {{ background: white; border-radius: 14px; padding: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.05); }}
     .priority-high {{ border: 2px solid #f59e0b; }}
+    .chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }}
+    .chip {{ display: inline-block; padding: 6px 10px; border-radius: 999px; background: #eef2ff; font-size: 13px; }}
+    .nearby-block {{ margin-top: 12px; }}
     table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; margin-top: 16px; }}
     th, td {{ text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }}
     th {{ background: #eef2ff; }}
@@ -122,7 +135,7 @@ def main():
       <p>目前觀察區域：{', '.join(esc(x) for x in watchlist.get('regions', []))}</p>
       <p>房型分類：{', '.join(esc(x) for x in watchlist.get('layout_types', []))}</p>
       <p>資料筆數：<strong>{len(rows)}</strong></p>
-      <p class=\"muted\">重點：每坪單價要搭配房型一起看，避免套房與家庭房混在一起。</p>
+      <p class=\"muted\">重點：每坪單價要搭配房型一起看，也要搭配附近可比社區一起看。</p>
     </section>
 
     <section>
@@ -159,9 +172,9 @@ def main():
     <section class=\"card\">
       <h2>下一步建議</h2>
       <ul>
-        <li>先補更多特別觀察社區，例如你最在意的指標社區</li>
+        <li>先把摩納哥社區周邊社區名單補進 nearby_communities</li>
         <li>之後每筆資料都加上房型，讓單價比較更準</li>
-        <li>下一版可加「區域 × 房型」與「社區 × 房型」走勢圖</li>
+        <li>下一版可加「區域 × 房型」與「摩納哥 vs 周邊社區」比較表</li>
       </ul>
     </section>
   </div>

@@ -7,6 +7,7 @@ MVP for long-term Tamsui housing market tracking.
 Track long-term price trends for:
 - Tamsui sub-areas (e.g. 淡海新市鎮、竹圍、紅樹林、淡水站周邊)
 - watched communities/buildings such as 摩納哥社區
+- nearby comparable communities around a focal building/community
 - price observations grouped by layout type, so 套房 / 2房 / 3房 are not mixed together
 
 ## MVP scope
@@ -16,12 +17,13 @@ Track long-term price trends for:
 - static HTML dashboard
 - community watchlist
 - layout-based grouping for more realistic price comparison
+- nearby-community slots for focal projects
 - ready for cron automation later
 
 ## Structure
 
 - `data/observations.json` — raw observation log
-- `data/watchlist.json` — watched regions/communities/layout types
+- `data/watchlist.json` — watched regions/communities/layout types/nearby communities
 - `scripts/add_observation.py` — append one observation
 - `scripts/build_dashboard.py` — generate static dashboard HTML
 - `docs/index.html` — generated dashboard
