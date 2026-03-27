@@ -252,8 +252,9 @@ def main():
     <section class=\"card\">
       <h2>資料說明</h2>
       <ul>
-        <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄。</li>
+        <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄，可信度高於 baseline。</li>
         <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
+        <li>目前摩納哥、托斯卡尼麥迪奇名家、尚海、高第已有多筆公開頁明細；其他社區仍有部分 baseline 佔比較高，後續會繼續補正。</li>
         <li>之後若補到更精確的待售/成交資訊，可以直接新增，不需要刪掉舊資料。</li>
       </ul>
     </section>
