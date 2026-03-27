@@ -28,6 +28,15 @@ Track long-term price trends for:
 - `scripts/build_dashboard.py` — generate static dashboard HTML
 - `docs/index.html` — generated dashboard
 
+## Current watched nearby communities
+
+For the first MVP pass, Monaco (摩納哥社區) is paired with these nearby/comparable communities:
+- 托斯卡尼麥迪奇名家
+- 荷雅時尚館
+- 荷雅名人館
+
+This is a practical comparison list built from public community comparison pages. It is a working shortlist for tracking, not a strict GIS-ranked nearest-neighbor dataset.
+
 ## Example usage
 
 Add one observed listing:
