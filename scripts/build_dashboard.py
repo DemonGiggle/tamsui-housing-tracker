@@ -343,6 +343,11 @@ def main():
     .controls {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:16px; }}
     .control label {{ display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#374151; }}
     .control select {{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; background:white; }}
+    .tabbar {{ display:flex; gap:10px; overflow:auto; padding:10px 0 2px; margin-top:18px; scrollbar-width:thin; }}
+    .tab-btn {{ border:0; background:#e5e7eb; color:#374151; padding:10px 14px; border-radius:999px; font-weight:600; cursor:pointer; white-space:nowrap; }}
+    .tab-btn.active {{ background:#4f46e5; color:white; }}
+    .tab-panel {{ display:none; margin-top:18px; }}
+    .tab-panel.active {{ display:block; }}
     table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; margin-top: 16px; }}
     th, td {{ text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; vertical-align: top; }}
     th {{ background: #eef2ff; }}
@@ -352,6 +357,7 @@ def main():
       .wrap {{ padding: 14px; }}
       th, td {{ font-size: 13px; padding: 8px; }}
       .chart-head {{ flex-direction:column; }}
+      .tabbar {{ margin-left:-2px; margin-right:-2px; }}
     }}
   </style>
 </head>
@@ -375,66 +381,76 @@ def main():
           <select id=\"layoutFilter\">{''.join(layout_options)}</select>
         </div>
       </div>
+      <div class=\"tabbar\" role=\"tablist\">
+        <button class=\"tab-btn active\" data-tab=\"overview\" role=\"tab\">總覽</button>
+        <button class=\"tab-btn\" data-tab=\"trends\" role=\"tab\">價格走勢</button>
+        <button class=\"tab-btn\" data-tab=\"details\" role=\"tab\">社區／房型明細</button>
+        <button class=\"tab-btn\" data-tab=\"raw\" role=\"tab\">原始資料</button>
+      </div>
     </section>
 
-    {''.join(chart_blocks)}
-    {''.join(monaco_sections)}
-
-    <section>
-      <h2>特別觀察建案</h2>
-      <div class=\"grid\">{''.join(watch_community_cards) or '<div class="card">目前尚未設定</div>'}</div>
+    <section class=\"tab-panel active\" data-panel=\"overview\">
+      {''.join(chart_blocks)}
+      {''.join(monaco_sections)}
+      <section>
+        <h2>特別觀察建案</h2>
+        <div class=\"grid\">{''.join(watch_community_cards) or '<div class="card">目前尚未設定</div>'}</div>
+      </section>
+      <section>
+        <h2>區域概覽</h2>
+        <div class=\"grid\">{''.join(region_cards)}</div>
+      </section>
+      <section>
+        <h2>房型概覽</h2>
+        <div class=\"grid\">{''.join(layout_cards)}</div>
+      </section>
     </section>
 
-    <section>
-      <h2>區域概覽</h2>
-      <div class=\"grid\">{''.join(region_cards)}</div>
+    <section class=\"tab-panel\" data-panel=\"trends\">
+      {''.join(chart_blocks)}
+      <section>
+        <h2>社區 × 房型 × 月份 價格序列</h2>
+        <table id=\"series-table\">
+          <thead><tr><th>社區</th><th>房型</th><th>月份</th><th>樣本數</th><th>平均單價</th><th>中位單價</th><th>最低單價</th><th>最高單價</th><th>平均總價</th><th>來源</th></tr></thead>
+          <tbody>{''.join(series_rows) or '<tr><td colspan="10">尚無月度序列資料</td></tr>'}</tbody>
+        </table>
+      </section>
     </section>
 
-    <section>
-      <h2>房型概覽</h2>
-      <div class=\"grid\">{''.join(layout_cards)}</div>
+    <section class=\"tab-panel\" data-panel=\"details\">
+      <section>
+        <h2>社區觀察</h2>
+        <table>
+          <thead><tr><th>社區</th><th>區域</th><th>主要房型</th><th>平均單價</th><th>樣本數</th><th>最近觀察</th></tr></thead>
+          <tbody>{''.join(community_rows) or '<tr><td colspan="6">目前還沒有社區資料</td></tr>'}</tbody>
+        </table>
+      </section>
+      <section>
+        <h2>社區 × 房型明細</h2>
+        <table id=\"layout-detail-table\">
+          <thead><tr><th>社區</th><th>房型</th><th>樣本數</th><th>平均單價</th><th>平均總價</th><th>最近觀察</th><th>來源</th></tr></thead>
+          <tbody>{''.join(layout_detail_rows) or '<tr><td colspan="7">尚無房型資料</td></tr>'}</tbody>
+        </table>
+      </section>
     </section>
 
-    <section>
-      <h2>社區觀察</h2>
-      <table>
-        <thead><tr><th>社區</th><th>區域</th><th>主要房型</th><th>平均單價</th><th>樣本數</th><th>最近觀察</th></tr></thead>
-        <tbody>{''.join(community_rows) or '<tr><td colspan="6">目前還沒有社區資料</td></tr>'}</tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>社區 × 房型明細</h2>
-      <table id=\"layout-detail-table\">
-        <thead><tr><th>社區</th><th>房型</th><th>樣本數</th><th>平均單價</th><th>平均總價</th><th>最近觀察</th><th>來源</th></tr></thead>
-        <tbody>{''.join(layout_detail_rows) or '<tr><td colspan="7">尚無房型資料</td></tr>'}</tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>社區 × 房型 × 月份 價格序列</h2>
-      <table id=\"series-table\">
-        <thead><tr><th>社區</th><th>房型</th><th>月份</th><th>樣本數</th><th>平均單價</th><th>中位單價</th><th>最低單價</th><th>最高單價</th><th>平均總價</th><th>來源</th></tr></thead>
-        <tbody>{''.join(series_rows) or '<tr><td colspan="10">尚無月度序列資料</td></tr>'}</tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>最新原始 observations</h2>
-      <table id=\"raw-table\">
-        <thead><tr><th>日期</th><th>月份</th><th>區域</th><th>社區</th><th>房型</th><th>單價</th><th>總價</th><th>來源</th><th>raw hash</th></tr></thead>
-        <tbody>{''.join(latest_rows) or '<tr><td colspan="9">尚無資料</td></tr>'}</tbody>
-      </table>
-    </section>
-
-    <section class=\"card\">
-      <h2>資料說明</h2>
-      <ul>
-        <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄，可信度高於 baseline。</li>
-        <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
-        <li>目前摩納哥、托斯卡尼麥迪奇名家、尚海、高第、清淞、荷雅名人館、荷雅時尚館已有多筆公開頁明細；水立方、托斯卡尼翡冷翠仍有部分 baseline 佔比較高，後續會繼續補正。</li>
-        <li><strong>raw_hash</strong> 用來避免同一批原始 observation 被重複匯入；重點分析則放在月度聚合後的價格序列。</li>
-      </ul>
+    <section class=\"tab-panel\" data-panel=\"raw\">
+      <section>
+        <h2>最新原始 observations</h2>
+        <table id=\"raw-table\">
+          <thead><tr><th>日期</th><th>月份</th><th>區域</th><th>社區</th><th>房型</th><th>單價</th><th>總價</th><th>來源</th><th>raw hash</th></tr></thead>
+          <tbody>{''.join(latest_rows) or '<tr><td colspan="9">尚無資料</td></tr>'}</tbody>
+        </table>
+      </section>
+      <section class=\"card\">
+        <h2>資料說明</h2>
+        <ul>
+          <li><strong>community.houseprice.tw</strong>：直接從公開社區頁可讀到的成交/房型資料補錄，可信度高於 baseline。</li>
+          <li><strong>public-baseline</strong>：公開頁只拿得到均價、格局範圍或待售價位時，先建立的正式基準資料，方便後續持續覆蓋更新。</li>
+          <li>目前摩納哥、托斯卡尼麥迪奇名家、尚海、高第、清淞、荷雅名人館、荷雅時尚館已有多筆公開頁明細；水立方、托斯卡尼翡冷翠仍有部分 baseline 佔比較高，後續會繼續補正。</li>
+          <li><strong>raw_hash</strong> 用來避免同一批原始 observation 被重複匯入；重點分析則放在月度聚合後的價格序列。</li>
+        </ul>
+      </section>
     </section>
   </div>
   <script>
@@ -452,8 +468,25 @@ def main():
       }});
     }}
 
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    const savedTab = localStorage.getItem('housingTrackerTab') || 'overview';
+
+    function activateTab(tab) {{
+      tabButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tab));
+      tabPanels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === tab));
+      localStorage.setItem('housingTrackerTab', tab);
+    }}
+
+    tabButtons.forEach((btn) => {{
+      btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+    }});
+
     document.getElementById('communityFilter').addEventListener('change', applyFilters);
     document.getElementById('layoutFilter').addEventListener('change', applyFilters);
+
+    activateTab(savedTab);
+    applyFilters();
   </script>
 </body>
 </html>
