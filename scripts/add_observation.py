@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +20,8 @@ def main():
     p.add_argument('--type', default='listing')
     p.add_argument('--region', required=True)
     p.add_argument('--community', default='')
+    p.add_argument('--layout-type', default='未分類')
+    p.add_argument('--rooms', type=float, default=0.0)
     p.add_argument('--source', default='manual')
     p.add_argument('--total-price', type=float, default=0.0)
     p.add_argument('--unit-price', type=float, default=0.0)
@@ -30,10 +33,12 @@ def main():
 
     rows = load_rows()
     row = {
-        'observed_at': args.observed_at or '2026-03-27',
+        'observed_at': args.observed_at or str(date.today()),
         'type': args.type,
         'region': args.region,
         'community': args.community,
+        'layout_type': args.layout_type,
+        'rooms': args.rooms,
         'source': args.source,
         'total_price': args.total_price,
         'unit_price': args.unit_price,

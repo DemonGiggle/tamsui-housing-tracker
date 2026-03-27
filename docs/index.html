@@ -10,6 +10,7 @@
     .hero { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 6px 18px rgba(0,0,0,.06); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }
     .card { background: white; border-radius: 14px; padding: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.05); }
+    .priority-high { border: 2px solid #f59e0b; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; margin-top: 16px; }
     th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
     th { background: #eef2ff; }
@@ -23,13 +24,33 @@
       <h1>淡水房市追蹤 MVP</h1>
       <p class="muted">先把資料累積起來，再慢慢長成長期走勢圖、社區比較、提醒系統。</p>
       <p>目前觀察區域：淡水全區, 淡海新市鎮, 竹圍, 紅樹林, 淡水站周邊</p>
-      <p>資料筆數：<strong>3</strong></p>
-      <p class="muted">資料來源目前以手動觀察為主；後續可接實價登錄、售屋平台、社區追蹤。</p>
+      <p>房型分類：套房, 1房, 2房, 3房, 4房以上</p>
+      <p>資料筆數：<strong>4</strong></p>
+      <p class="muted">重點：每坪單價要搭配房型一起看，避免套房與家庭房混在一起。</p>
+    </section>
+
+    <section>
+      <h2>特別觀察建案</h2>
+      <div class="grid">
+        <div class="card priority-high">
+          <h3>摩納哥社區</h3>
+          <p>區域：淡水</p>
+          <p>優先級：high</p>
+          <p class="muted">特別需要持續觀察的指標建案</p>
+        </div>
+        </div>
     </section>
 
     <section>
       <h2>區域概覽</h2>
       <div class="grid">
+        <div class="card">
+          <h3>淡水</h3>
+          <p>樣本數：1</p>
+          <p>平均單價：43.60 萬/坪</p>
+          <p>平均總價：1298.0 萬</p>
+        </div>
+        
         <div class="card">
           <h3>淡海新市鎮</h3>
           <p>樣本數：1</p>
@@ -54,27 +75,46 @@
     </section>
 
     <section>
+      <h2>房型概覽</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>2房</h3>
+          <p>樣本數：3</p>
+          <p>平均單價：47.40 萬/坪</p>
+          <p>平均總價：1499.3 萬</p>
+        </div>
+        
+        <div class="card">
+          <h3>3房</h3>
+          <p>樣本數：1</p>
+          <p>平均單價：39.80 萬/坪</p>
+          <p>平均總價：1388.0 萬</p>
+        </div>
+        </div>
+    </section>
+
+    <section>
       <h2>社區觀察</h2>
       <table>
-        <thead><tr><th>社區</th><th>區域</th><th>平均單價</th><th>樣本數</th><th>最近觀察</th></tr></thead>
-        <tbody><tr><td>示例社區</td><td>淡海新市鎮</td><td>39.80</td><td>1</td><td>2026-03-27</td></tr><tr><td>示例社區 B</td><td>竹圍</td><td>52.40</td><td>1</td><td>2026-03-27</td></tr><tr><td>示例社區C</td><td>紅樹林</td><td>46.20</td><td>1</td><td>2026-03-27</td></tr></tbody>
+        <thead><tr><th>社區</th><th>區域</th><th>主要房型</th><th>平均單價</th><th>樣本數</th><th>最近觀察</th></tr></thead>
+        <tbody><tr><td>摩納哥社區</td><td>淡水</td><td>2房</td><td>43.60</td><td>1</td><td>2026-03-27</td></tr><tr><td>示例社區</td><td>淡海新市鎮</td><td>3房</td><td>39.80</td><td>1</td><td>2026-03-27</td></tr><tr><td>示例社區 B</td><td>竹圍</td><td>2房</td><td>52.40</td><td>1</td><td>2026-03-27</td></tr><tr><td>示例社區C</td><td>紅樹林</td><td>2房</td><td>46.20</td><td>1</td><td>2026-03-27</td></tr></tbody>
       </table>
     </section>
 
     <section>
       <h2>最新觀察</h2>
       <table>
-        <thead><tr><th>日期</th><th>區域</th><th>社區</th><th>單價(萬/坪)</th><th>總價(萬)</th><th>備註</th></tr></thead>
-        <tbody><tr><td>2026-03-27</td><td>淡海新市鎮</td><td>示例社區</td><td>39.8</td><td>1388.0</td><td>MVP seed data for dashboard preview</td></tr><tr><td>2026-03-27</td><td>竹圍</td><td>示例社區 B</td><td>52.4</td><td>1680.0</td><td>MVP seed data for dashboard preview</td></tr><tr><td>2026-03-27</td><td>紅樹林</td><td>示例社區C</td><td>46.2</td><td>1520.0</td><td>MVP smoke test</td></tr></tbody>
+        <thead><tr><th>日期</th><th>區域</th><th>社區</th><th>房型</th><th>單價(萬/坪)</th><th>總價(萬)</th><th>備註</th></tr></thead>
+        <tbody><tr><td>2026-03-27</td><td>淡海新市鎮</td><td>示例社區</td><td>3房</td><td>39.8</td><td>1388.0</td><td>MVP seed data for dashboard preview</td></tr><tr><td>2026-03-27</td><td>竹圍</td><td>示例社區 B</td><td>2房</td><td>52.4</td><td>1680.0</td><td>MVP seed data for dashboard preview</td></tr><tr><td>2026-03-27</td><td>紅樹林</td><td>示例社區C</td><td>2房</td><td>46.2</td><td>1520.0</td><td>MVP smoke test</td></tr><tr><td>2026-03-27</td><td>淡水</td><td>摩納哥社區</td><td>2房</td><td>43.6</td><td>1298.0</td><td>指標建案 smoke test</td></tr></tbody>
       </table>
     </section>
 
     <section class="card">
       <h2>下一步建議</h2>
       <ul>
-        <li>先補你的觀察社區名單到 <code>data/watchlist.json</code></li>
-        <li>每週手動補幾筆觀察資料，先把樣本養起來</li>
-        <li>下一版再加月度走勢圖、異常價格提醒、來源欄位細分</li>
+        <li>先補更多特別觀察社區，例如你最在意的指標社區</li>
+        <li>之後每筆資料都加上房型，讓單價比較更準</li>
+        <li>下一版可加「區域 × 房型」與「社區 × 房型」走勢圖</li>
       </ul>
     </section>
   </div>

@@ -4,6 +4,8 @@
     "type": "seed",
     "region": "淡海新市鎮",
     "community": "示例社區",
+    "layout_type": "3房",
+    "rooms": 3,
     "source": "manual",
     "total_price": 1388.0,
     "unit_price": 39.8,
@@ -17,6 +19,8 @@
     "type": "seed",
     "region": "竹圍",
     "community": "示例社區 B",
+    "layout_type": "2房",
+    "rooms": 2,
     "source": "manual",
     "total_price": 1680.0,
     "unit_price": 52.4,
@@ -30,6 +34,8 @@
     "type": "listing",
     "region": "紅樹林",
     "community": "示例社區C",
+    "layout_type": "2房",
+    "rooms": 2,
     "source": "manual",
     "total_price": 1520.0,
     "unit_price": 46.2,
@@ -37,5 +43,20 @@
     "building_age": 0.0,
     "parking": false,
     "note": "MVP smoke test"
+  },
+  {
+    "observed_at": "2026-03-27",
+    "type": "listing",
+    "region": "淡水",
+    "community": "摩納哥社區",
+    "layout_type": "2房",
+    "rooms": 2.0,
+    "source": "manual",
+    "total_price": 1298.0,
+    "unit_price": 43.6,
+    "size_ping": 29.8,
+    "building_age": 0.0,
+    "parking": false,
+    "note": "指標建案 smoke test"
   }
 ]
