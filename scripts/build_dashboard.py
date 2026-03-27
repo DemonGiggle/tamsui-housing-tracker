@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / 'data' / 'observations.json'
 WATCHLIST_PATH = ROOT / 'data' / 'watchlist.json'
+SERIES_CACHE_PATH = ROOT / 'data' / 'series_cache.json'
 OUT_PATH = ROOT / 'docs' / 'index.html'
 
 
@@ -260,6 +261,8 @@ def main():
         series_rows.append(
             f"<tr data-community=\"{esc(community)}\" data-layout=\"{esc(layout)}\"><td>{esc(community)}</td><td>{esc(layout)}</td><td>{esc(month)}</td><td>{len(items)}</td><td>{avg(unit_prices):.2f}</td><td>{median(unit_prices):.2f}</td><td>{min([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{max([v for v in unit_prices if isinstance(v,(int,float)) and v > 0], default=0):.2f}</td><td>{avg(total_prices):.1f}</td><td>{esc(sources)}</td></tr>"
         )
+
+    SERIES_CACHE_PATH.write_text(json.dumps(series_export, ensure_ascii=False, indent=2))
 
     latest_rows = []
     for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:80]:
