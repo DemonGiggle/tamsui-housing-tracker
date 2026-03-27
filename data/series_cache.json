@@ -387,16 +387,17 @@
     "community": "尚海",
     "layout_type": "2房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 46.87,
-    "median_unit_price": 46.87,
-    "min_unit_price": 46.87,
+    "sample_count": 2,
+    "avg_unit_price": 45.94,
+    "median_unit_price": 45.94,
+    "min_unit_price": 45.0,
     "max_unit_price": 46.87,
-    "avg_total_price": 1160.0,
+    "avg_total_price": 1140.0,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -979,16 +980,17 @@
     "community": "尚海",
     "layout_type": "3房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 41.32,
-    "median_unit_price": 41.32,
+    "sample_count": 2,
+    "avg_unit_price": 41.81,
+    "median_unit_price": 41.81,
     "min_unit_price": 41.32,
-    "max_unit_price": 41.32,
-    "avg_total_price": 1547.6,
+    "max_unit_price": 42.3,
+    "avg_total_price": 1483.8,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -3331,16 +3333,17 @@
     "community": "托斯卡尼麥迪奇名家",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 32.67,
-    "median_unit_price": 32.67,
-    "min_unit_price": 32.67,
+    "sample_count": 2,
+    "avg_unit_price": 32.23,
+    "median_unit_price": 32.23,
+    "min_unit_price": 31.8,
     "max_unit_price": 32.67,
-    "avg_total_price": 1176.3,
+    "avg_total_price": 787.1,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -5075,16 +5078,17 @@
     "community": "摩納哥社區",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 43.37,
-    "median_unit_price": 43.37,
+    "sample_count": 2,
+    "avg_unit_price": 43.53,
+    "median_unit_price": 43.53,
     "min_unit_price": 43.37,
-    "max_unit_price": 43.37,
-    "avg_total_price": 630.7,
+    "max_unit_price": 43.7,
+    "avg_total_price": 609.4,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -8035,16 +8039,17 @@
     "community": "清淞",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 40.37,
-    "median_unit_price": 40.37,
-    "min_unit_price": 40.37,
+    "sample_count": 2,
+    "avg_unit_price": 39.94,
+    "median_unit_price": 39.94,
+    "min_unit_price": 39.5,
     "max_unit_price": 40.37,
-    "avg_total_price": 771.1,
+    "avg_total_price": 604.5,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -8627,16 +8632,17 @@
     "community": "清淞",
     "layout_type": "2房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 33.87,
-    "median_unit_price": 33.87,
+    "sample_count": 2,
+    "avg_unit_price": 36.83,
+    "median_unit_price": 36.83,
     "min_unit_price": 33.87,
-    "max_unit_price": 33.87,
-    "avg_total_price": 1217.3,
+    "max_unit_price": 39.8,
+    "avg_total_price": 988.6,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -10483,16 +10489,17 @@
     "community": "荷雅名人館",
     "layout_type": "2房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 36.22,
-    "median_unit_price": 36.22,
-    "min_unit_price": 36.22,
+    "sample_count": 2,
+    "avg_unit_price": 35.51,
+    "median_unit_price": 35.51,
+    "min_unit_price": 34.8,
     "max_unit_price": 36.22,
-    "avg_total_price": 1239.8,
+    "avg_total_price": 1059.9,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -11059,16 +11066,17 @@
     "community": "荷雅名人館",
     "layout_type": "3房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 32.97,
-    "median_unit_price": 32.97,
+    "sample_count": 2,
+    "avg_unit_price": 33.59,
+    "median_unit_price": 33.59,
     "min_unit_price": 32.97,
-    "max_unit_price": 32.97,
-    "avg_total_price": 1746.1,
+    "max_unit_price": 34.2,
+    "avg_total_price": 1463.0,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -12227,16 +12235,17 @@
     "community": "荷雅時尚館",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 36.77,
-    "median_unit_price": 36.77,
+    "sample_count": 2,
+    "avg_unit_price": 36.78,
+    "median_unit_price": 36.78,
     "min_unit_price": 36.77,
-    "max_unit_price": 36.77,
-    "avg_total_price": 954.1,
+    "max_unit_price": 36.8,
+    "avg_total_price": 726.0,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
@@ -13987,16 +13996,17 @@
     "community": "高第",
     "layout_type": "1房",
     "month": "2025-01",
-    "sample_count": 1,
-    "avg_unit_price": 39.17,
-    "median_unit_price": 39.17,
+    "sample_count": 2,
+    "avg_unit_price": 39.59,
+    "median_unit_price": 39.59,
     "min_unit_price": 39.17,
-    "max_unit_price": 39.17,
-    "avg_total_price": 542.0,
+    "max_unit_price": 40.0,
+    "avg_total_price": 501.0,
     "sources": [
+      "community.houseprice.tw",
       "public-baseline"
     ],
-    "has_real": false,
+    "has_real": true,
     "has_baseline": true
   },
   {
