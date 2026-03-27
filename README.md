@@ -7,7 +7,7 @@ MVP for long-term Tamsui housing market tracking.
 Track long-term price trends for:
 - Tamsui sub-areas (e.g. 淡海新市鎮、竹圍、紅樹林、淡水站周邊)
 - watched communities/buildings such as 摩納哥社區
-- nearby comparable communities around a focal building/community
+- nearby communities around a focal building/community
 - price observations grouped by layout type, so 套房 / 2房 / 3房 are not mixed together
 
 ## MVP scope
@@ -30,12 +30,14 @@ Track long-term price trends for:
 
 ## Current watched nearby communities
 
-For the first MVP pass, Monaco (摩納哥社區) is paired with these nearby/comparable communities:
+For the current first-pass geographic shortlist, Monaco (摩納哥社區) is paired with these nearby communities:
+- 水立方
+- 托斯卡尼翡冷翠
 - 托斯卡尼麥迪奇名家
-- 荷雅時尚館
 - 荷雅名人館
+- 尚海
 
-This is a practical comparison list built from public community comparison pages. It is a working shortlist for tracking, not a strict GIS-ranked nearest-neighbor dataset.
+This list is intentionally geography-first: nearby communities around the 淡金路38巷 / surrounding block area, used as a working local observation cluster.
 
 ## Example usage
 
