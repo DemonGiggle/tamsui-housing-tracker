@@ -60,10 +60,10 @@ def summarize_rows(items):
     }
 
 
-def svg_line_chart(series_map, title, y_label='萬/坪'):
-    width = 900
-    height = 320
-    margin = {'left': 56, 'right': 24, 'top': 24, 'bottom': 44}
+def svg_line_chart(series_map, title, chart_id, y_label='萬/坪'):
+    width = 920
+    height = 340
+    margin = {'left': 56, 'right': 90, 'top': 24, 'bottom': 44}
     all_months = sorted({point['month'] for points in series_map.values() for point in points})
     all_vals = [point['avg_unit_price'] for points in series_map.values() for point in points if point['avg_unit_price'] > 0]
     if not all_months or not all_vals:
@@ -84,7 +84,9 @@ def svg_line_chart(series_map, title, y_label='萬/坪'):
     def y_of(v):
         return margin['top'] + (max_y - v) / (max_y - min_y) * plot_h
 
-    colors = ['#4f46e5', '#059669', '#dc2626', '#d97706', '#0891b2', '#7c3aed', '#65a30d', '#db2777']
+    colors = ['#1d4ed8', '#dc2626', '#059669', '#d97706', '#7c3aed', '#0f766e', '#be123c', '#4338ca', '#65a30d', '#c2410c']
+    dashes = ['', '8 5', '4 4', '10 4 2 4', '2 4', '12 6', '6 3 2 3', '', '8 4 2 4', '3 3']
+
     grid = []
     for step in range(5):
         y_val = min_y + (max_y - min_y) * step / 4
@@ -97,13 +99,15 @@ def svg_line_chart(series_map, title, y_label='萬/坪'):
         x = x_of(idx)
         x_labels.append(f'<text x="{x:.1f}" y="{height-14}" text-anchor="middle" font-size="11" fill="#6b7280">{esc(month)}</text>')
 
-    lines = []
+    series_blocks = []
     legends = []
     for i, (label, points) in enumerate(series_map.items()):
         color = colors[i % len(colors)]
+        dash = dashes[i % len(dashes)]
         month_to_point = {p['month']: p for p in points}
         coords = []
         dots = []
+        plotted = []
         for idx, month in enumerate(all_months):
             point = month_to_point.get(month)
             if not point:
@@ -111,28 +115,42 @@ def svg_line_chart(series_map, title, y_label='萬/坪'):
             x = x_of(idx)
             y = y_of(point['avg_unit_price'])
             coords.append(f'{x:.1f},{y:.1f}')
-            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{color}"><title>{esc(label)} {esc(month)}: {point["avg_unit_price"]:.2f} 萬/坪 (n={point["sample_count"]})</title></circle>')
+            plotted.append((x, y, point))
+            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.2" fill="{color}" stroke="#fff" stroke-width="1.5"><title>{esc(label)} {esc(month)}: {point["avg_unit_price"]:.2f} 萬/坪 (n={point["sample_count"]})</title></circle>')
         if coords:
-            lines.append(f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{" ".join(coords)}" />')
-            lines.extend(dots)
-            legends.append(f'<span class="legend-item"><span class="legend-swatch" style="background:{color}"></span>{esc(label)}</span>')
+            label_text = ''
+            if plotted:
+                lx, ly, last_point = plotted[-1]
+                label_text = f'<text x="{min(lx + 10, width - 4):.1f}" y="{max(ly + 4, 16):.1f}" font-size="12" font-weight="700" fill="{color}">{esc(label)}</text>'
+            dash_attr = f' stroke-dasharray="{dash}"' if dash else ''
+            series_blocks.append(
+                f'<g class="chart-series" data-series="{esc(label)}">'
+                f'<polyline fill="none" stroke="{color}" stroke-width="3.5"{dash_attr} points="{" ".join(coords)}" />'
+                f'{"".join(dots)}{label_text}</g>'
+            )
+            legends.append(
+                f'<button type="button" class="legend-item is-active" data-chart="{esc(chart_id)}" data-series="{esc(label)}" aria-pressed="true">'
+                f'<span class="legend-swatch" style="background:{color}; border:2px solid {color};"></span>'
+                f'<span class="legend-name">{esc(label)}</span></button>'
+            )
 
     return f'''
-    <div class="card">
+    <div class="card chart-card" data-chart-id="{esc(chart_id)}">
       <div class="chart-head">
         <div>
           <h3>{esc(title)}</h3>
           <p class="muted">Y 軸：平均單價（{esc(y_label)}）｜ X 軸：月份</p>
         </div>
-        <div class="legend">{"".join(legends)}</div>
+        <div class="legend legend-buttons">{"".join(legends)}</div>
       </div>
       <svg viewBox="0 0 {width} {height}" class="chart" role="img" aria-label="{esc(title)}">
         {''.join(grid)}
         <line x1="{margin['left']}" y1="{height-margin['bottom']}" x2="{width-margin['right']}" y2="{height-margin['bottom']}" stroke="#9ca3af" />
         <line x1="{margin['left']}" y1="{margin['top']}" x2="{margin['left']}" y2="{height-margin['bottom']}" stroke="#9ca3af" />
-        {''.join(lines)}
+        {''.join(series_blocks)}
         {''.join(x_labels)}
       </svg>
+      <p class="muted mobile-hint">提示：可點上方 legend 開關線條；右側線尾直接標社區名稱，手機上比較不容易看錯。</p>
     </div>
     '''
 
@@ -280,7 +298,7 @@ def main():
                 pts = [s for s in series_export if s['community'] == focus_name and s['layout_type'] == default_layout]
                 if pts:
                     series_map[focus_name] = pts
-            chart_blocks.append(svg_line_chart(series_map, f'摩納哥周邊 {default_layout} 平均單價走勢'))
+            chart_blocks.append(svg_line_chart(series_map, f'摩納哥周邊 {default_layout} 平均單價走勢', 'monaco-nearby-2room'))
 
             monaco_sections.append(f"""
             <section>
@@ -337,9 +355,14 @@ def main():
     .eyebrow {{ font-size: 12px; color: #6366f1; font-weight: 700; letter-spacing: .04em; margin-bottom: 8px; }}
     .chart-head {{ display:flex; gap:12px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }}
     .legend {{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }}
-    .legend-item {{ display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#374151; }}
-    .legend-swatch {{ width:12px; height:12px; border-radius:999px; display:inline-block; }}
+    .legend-buttons {{ margin-top:8px; }}
+    .legend-item {{ display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#374151; background:white; border:1px solid #d1d5db; border-radius:999px; padding:6px 10px; cursor:pointer; white-space:nowrap; }}
+    .legend-item.is-muted {{ opacity:.45; }}
+    .legend-name {{ line-height:1; }}
+    .legend-swatch {{ width:12px; height:12px; border-radius:999px; display:inline-block; flex:0 0 auto; }}
     .chart {{ width:100%; height:auto; margin-top:12px; }}
+    .chart-series.is-hidden {{ opacity:.12; }}
+    .mobile-hint {{ margin-top:8px; font-size:13px; }}
     .controls {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:16px; }}
     .control label {{ display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#374151; }}
     .control select {{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; background:white; }}
@@ -358,6 +381,9 @@ def main():
       th, td {{ font-size: 13px; padding: 8px; }}
       .chart-head {{ flex-direction:column; }}
       .tabbar {{ margin-left:-2px; margin-right:-2px; }}
+      .legend {{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width:100%; }}
+      .legend-item {{ justify-content:flex-start; width:100%; }}
+      .mobile-hint {{ font-size:12px; }}
     }}
   </style>
 </head>
@@ -454,8 +480,6 @@ def main():
     </section>
   </div>
   <script>
-    const SERIES_DATA = {json.dumps(series_export, ensure_ascii=False)};
-
     function applyFilters() {{
       const community = document.getElementById('communityFilter').value;
       const layout = document.getElementById('layoutFilter').value;
@@ -478,6 +502,20 @@ def main():
       localStorage.setItem('housingTrackerTab', tab);
     }}
 
+    function setupLegendToggles() {{
+      document.querySelectorAll('.legend-item[data-chart]').forEach((btn) => {{
+        btn.addEventListener('click', () => {{
+          const chartId = btn.dataset.chart;
+          const seriesName = btn.dataset.series;
+          const target = document.querySelector(`[data-chart-id="${{chartId}}"] .chart-series[data-series="${{seriesName}}"]`);
+          if (!target) return;
+          const hidden = target.classList.toggle('is-hidden');
+          btn.classList.toggle('is-muted', hidden);
+          btn.setAttribute('aria-pressed', hidden ? 'false' : 'true');
+        }});
+      }});
+    }}
+
     tabButtons.forEach((btn) => {{
       btn.addEventListener('click', () => activateTab(btn.dataset.tab));
     }});
@@ -487,6 +525,7 @@ def main():
 
     activateTab(savedTab);
     applyFilters();
+    setupLegendToggles();
   </script>
 </body>
 </html>
