@@ -16,11 +16,11 @@ def run(cmd):
 
 def main():
     p = argparse.ArgumentParser(description='Refresh tracker artifacts')
-    p.add_argument('--import-real', action='store_true', help='Run public-source importer before rebuilding dashboard')
+    p.add_argument('--rebuild-baseline', action='store_true', help='Rebuild monthly baseline series before dashboard build')
     args = p.parse_args()
 
-    if args.import_real:
-        run([sys.executable, 'scripts/import_real_samples.py'])
+    if args.rebuild_baseline:
+        run([sys.executable, 'scripts/build_baseline_series.py'])
     run([sys.executable, 'scripts/build_dashboard.py'])
     print('\nDone: observations -> series_cache -> docs/index.html refreshed')
 
