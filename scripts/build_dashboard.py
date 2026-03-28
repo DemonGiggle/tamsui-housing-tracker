@@ -88,6 +88,7 @@ def build_trend_summary(series_export, communities, layouts):
                 'trend': trend_text(pct_change(latest_val, prev_1) if prev_1 else 0),
                 'signal': signal_class(pct_change(latest_val, prev_1) if prev_1 else 0),
                 'month_count': len(pts),
+                'data_points': sum(x.get('sample_count', 0) for x in pts),
             })
     cards.sort(key=lambda x: (x['community'], x['layout']))
     return cards
@@ -279,6 +280,7 @@ def main():
           <p>月變化：<strong>{item['mom']:+.2f}%</strong></p>
           <p>3 個月變化：<strong>{item['qoq']:+.2f}%</strong></p>
           <p>6 個月變化：<strong>{item['half']:+.2f}%</strong></p>
+          <p>資料筆數：<strong>{item['data_points']}</strong></p>
           <p>月份數：<strong>{item['month_count']}</strong></p>
           <p class="muted">短期趨勢：{esc(item['trend'])}</p>
         </div>
