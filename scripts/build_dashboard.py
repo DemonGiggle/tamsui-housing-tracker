@@ -61,6 +61,49 @@ def summarize_rows(items):
     }
 
 
+def pct_change(current, previous):
+    if not previous:
+        return 0
+    return ((current - previous) / previous) * 100
+
+
+def trend_text(value):
+    if value > 0.05:
+        return '上升'
+    if value < -0.05:
+        return '下降'
+    return '持平'
+
+
+def build_trend_summary(series_export, communities, layouts):
+    cards = []
+    for community in communities:
+        for layout in layouts:
+            pts = [x for x in series_export if x['community'] == community and x['layout_type'] == layout]
+            pts = sorted(pts, key=lambda x: x['month'])
+            if len(pts) < 2:
+                continue
+            latest = pts[-1]
+            prev_1 = pts[-2] if len(pts) >= 2 else None
+            prev_3 = pts[-4] if len(pts) >= 4 else None
+            prev_6 = pts[-7] if len(pts) >= 7 else None
+            mom = pct_change(latest['median_unit_price'], prev_1['median_unit_price']) if prev_1 else 0
+            qoq = pct_change(latest['median_unit_price'], prev_3['median_unit_price']) if prev_3 else 0
+            half = pct_change(latest['median_unit_price'], prev_6['median_unit_price']) if prev_6 else 0
+            cards.append({
+                'community': community,
+                'layout': layout,
+                'latest_month': latest['month'],
+                'latest_price': latest['median_unit_price'],
+                'mom': mom,
+                'qoq': qoq,
+                'half': half,
+                'trend': trend_text(mom),
+            })
+    cards.sort(key=lambda x: (x['community'], x['layout']))
+    return cards
+
+
 def svg_line_chart(series_map, title, chart_id, y_label='萬/坪', metric='avg_unit_price'):
     width = 920
     height = 340
@@ -264,6 +307,23 @@ def main():
 
     SERIES_CACHE_PATH.write_text(json.dumps(series_export, ensure_ascii=False, indent=2))
 
+    all_layouts = sorted({x.get('layout_type') or '未分類' for x in rows})
+    trend_cards = build_trend_summary(series_export, communities, all_layouts)
+    trend_card_html = []
+    for item in trend_cards:
+        trend_class = 'up' if item['mom'] > 0.05 else 'down' if item['mom'] < -0.05 else 'flat'
+        trend_card_html.append(f"""
+        <div class=\"card trend-card {trend_class}\" data-community=\"{esc(item['community'])}\" data-layout=\"{esc(item['layout'])}\">
+          <div class=\"eyebrow\">{esc(item['community'])}｜{esc(item['layout'])}</div>
+          <h3>{item['latest_month']}</h3>
+          <p>最新中位單價：<strong>{item['latest_price']:.2f}</strong> 萬/坪</p>
+          <p>月變化：<strong>{item['mom']:+.2f}%</strong></p>
+          <p>3 個月變化：<strong>{item['qoq']:+.2f}%</strong></p>
+          <p>6 個月變化：<strong>{item['half']:+.2f}%</strong></p>
+          <p class=\"muted\">短期趨勢：{esc(item['trend'])}</p>
+        </div>
+        """)
+
     latest_rows = []
     for row in sorted(rows, key=lambda x: x.get('observed_at', ''), reverse=True)[:80]:
         latest_rows.append(
@@ -383,6 +443,9 @@ def main():
     .chart {{ width:100%; height:auto; margin-top:12px; }}
     .chart-series.is-hidden {{ opacity:.12; }}
     .mobile-hint {{ margin-top:8px; font-size:13px; }}
+    .trend-card.up {{ border-left: 5px solid #16a34a; }}
+    .trend-card.down {{ border-left: 5px solid #dc2626; }}
+    .trend-card.flat {{ border-left: 5px solid #6b7280; }}
     .controls {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:16px; }}
     .control label {{ display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#374151; }}
     .control select {{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #d1d5db; background:white; }}
@@ -438,6 +501,10 @@ def main():
     <section class=\"tab-panel active\" data-panel=\"overview\">
       {''.join(chart_blocks)}
       {''.join(monaco_sections)}
+      <section>
+        <h2>月度價格變化摘要</h2>
+        <div class=\"grid\">{''.join(trend_card_html) or '<div class="card">目前尚無足夠資料可計算月度變化</div>'}</div>
+      </section>
       <section>
         <h2>特別觀察建案</h2>
         <div class=\"grid\">{''.join(watch_community_cards) or '<div class="card">目前尚未設定</div>'}</div>
@@ -532,6 +599,31 @@ def main():
           const hidden = target.classList.toggle('is-hidden');
           btn.classList.toggle('is-muted', hidden);
           btn.setAttribute('aria-pressed', hidden ? 'false' : 'true');
+        }});
+      }});
+    }}
+
+    function setupMetricToggles() {{
+      document.querySelectorAll('[data-chart-toggle]').forEach((wrap) => {{
+        const chartId = wrap.dataset.chartToggle;
+        wrap.querySelectorAll('.metric-btn').forEach((btn) => {{
+          btn.addEventListener('click', () => {{
+            const metric = btn.dataset.metric;
+            const root = wrap.closest('.chart-switcher');
+            if (!root) return;
+            root.querySelectorAll('.chart-variant').forEach((card) => {{
+              const active = card.dataset.metric === metric;
+              card.classList.toggle('active', active);
+              card.style.display = active ? 'block' : 'none';
+            }});
+            wrap.querySelectorAll('.metric-btn').forEach((b) => b.classList.toggle('active', b === btn));
+          }});
+        }});
+      }});
+      document.querySelectorAll('.chart-switcher').forEach((root) => {{
+        const cards = root.querySelectorAll('.chart-variant');
+        cards.forEach((card) => {{
+          card.style.display = card.classList.contains('active') ? 'block' : 'none';
         }});
       }});
     }}
