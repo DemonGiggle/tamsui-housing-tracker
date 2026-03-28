@@ -1,0 +1,257 @@
+{
+  "generated_at": "2026-03-28T03:57:52Z",
+  "items": [
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "尚海",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "尚海",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "尚海",
+      "layout_type": "4房以上"
+    },
+    {
+      "row_count": 2,
+      "latest_observed_month": "2025-06",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0010085",
+      "last_fetched_at": "2026-03-28T03:57:48Z",
+      "community": "托斯卡尼翡冷翠",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 3,
+      "latest_observed_month": "2025-09",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0010085",
+      "last_fetched_at": "2026-03-28T03:57:48Z",
+      "community": "托斯卡尼翡冷翠",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "托斯卡尼麥迪奇名家",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 43,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "2026-03-28T03:57:51Z",
+      "community": "托斯卡尼麥迪奇名家",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "托斯卡尼麥迪奇名家",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 1,
+      "latest_observed_month": "2025-12",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0011957",
+      "last_fetched_at": "2026-03-28T03:57:51Z",
+      "community": "托斯卡尼麥迪奇名家",
+      "layout_type": "未分類"
+    },
+    {
+      "row_count": 40,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "2026-03-28T03:57:42Z",
+      "community": "摩納哥社區",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 42,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "2026-03-28T03:57:42Z",
+      "community": "摩納哥社區",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "摩納哥社區",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 1,
+      "latest_observed_month": "2026-01",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0009663",
+      "last_fetched_at": "2026-03-28T03:57:42Z",
+      "community": "摩納哥社區",
+      "layout_type": "未分類"
+    },
+    {
+      "row_count": 1,
+      "latest_observed_month": "2025-09",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0020419",
+      "last_fetched_at": "2026-03-28T03:57:46Z",
+      "community": "水立方",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 4,
+      "latest_observed_month": "2025-08",
+      "last_source": "sinyi.community",
+      "last_source_url": "https://www.sinyi.com.tw/communitylist/communityinfo/0020419",
+      "last_fetched_at": "2026-03-28T03:57:46Z",
+      "community": "水立方",
+      "layout_type": "4房以上"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "清淞",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "清淞",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "清淞",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅名人館",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅名人館",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅名人館",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅名人館",
+      "layout_type": "4房以上"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅時尚館",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅時尚館",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "荷雅時尚館",
+      "layout_type": "3房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "高第",
+      "layout_type": "1房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "高第",
+      "layout_type": "2房"
+    },
+    {
+      "row_count": 39,
+      "latest_observed_month": "2026-03",
+      "last_source": "public-baseline",
+      "last_source_url": "",
+      "last_fetched_at": "",
+      "community": "高第",
+      "layout_type": "3房"
+    }
+  ]
+}
