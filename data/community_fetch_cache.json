@@ -43,5 +43,25 @@
     "building_id": "174606",
     "resolved_at": "2026-03-28",
     "search_url": "known-map"
+  },
+  "西恩那社區": {
+    "building_id": "5835",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "印象法蘭": {
+    "building_id": "32326",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "布拉諾": {
+    "building_id": "28720",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "麗景社區": {
+    "building_id": "6102",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
   }
 }

@@ -26,6 +26,17 @@ KNOWN_BUILDING_IDS = {
     '尚海': '169930',
     '清淞': '174701',
     '高第': '21875',
+    '西恩那社區': '5835',
+    '印象法蘭': '32326',
+    '布拉諾': '28720',
+    '麗景社區': '6102',
+}
+
+COMMUNITY_SOURCE_NAME = {
+    '西恩那社區': '托斯卡尼-西恩那',
+    '印象法蘭': '印象法藍',
+    '布拉諾': '布拉諾花園',
+    '麗景社區': '麗景',
 }
 
 LAYOUT_MAP = {
@@ -183,7 +194,9 @@ def main():
                 continue
             url = BASE_BUILDING.format(building_id=building_id)
             html = http_get(url)
-            parsed = parse_records(html, url, community)
+            parsed = parse_records(html, url, COMMUNITY_SOURCE_NAME.get(community, community))
+            for r in parsed:
+                r['community'] = community
             new_rows = [r for r in parsed if r['raw_hash'] not in existing]
             for r in new_rows:
                 existing.add(r['raw_hash'])
