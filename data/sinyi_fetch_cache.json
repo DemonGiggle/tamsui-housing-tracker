@@ -1,0 +1,26 @@
+{
+  "摩納哥社區": {
+    "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0009663",
+    "fetch_ok": true,
+    "html_size": 418571,
+    "parser_status": "needs_improved_parser"
+  },
+  "水立方": {
+    "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0020419",
+    "fetch_ok": true,
+    "html_size": 389539,
+    "parser_status": "needs_improved_parser"
+  },
+  "托斯卡尼翡冷翠": {
+    "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0010085",
+    "fetch_ok": true,
+    "html_size": 378807,
+    "parser_status": "needs_improved_parser"
+  },
+  "托斯卡尼麥迪奇名家": {
+    "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0011957",
+    "fetch_ok": true,
+    "html_size": 403279,
+    "parser_status": "needs_improved_parser"
+  }
+}
