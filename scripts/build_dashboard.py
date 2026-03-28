@@ -77,33 +77,17 @@ def build_trend_summary(series_export, communities, layouts):
             prev_1 = calc_series_value(pts[-2]) if len(pts) >= 2 else 0
             prev_3 = calc_series_value(pts[-4]) if len(pts) >= 4 else 0
             prev_6 = calc_series_value(pts[-7]) if len(pts) >= 7 else 0
-            total_samples = sum(x.get('sample_count', 0) for x in pts)
-            real_months = sum(1 for x in pts if x.get('has_real'))
-            latest_has_real = latest.get('has_real', False)
-            if latest_has_real:
-                latest_source_label = '本月含 real data'
-            elif real_months > 0:
-                latest_source_label = '本月 baseline／歷史曾含 real'
-            else:
-                latest_source_label = '目前全為 baseline'
-            mom = pct_change(latest_val, prev_1) if prev_1 else 0
-            qoq = pct_change(latest_val, prev_3) if prev_3 else 0
-            half = pct_change(latest_val, prev_6) if prev_6 else 0
             cards.append({
                 'community': community,
                 'layout': layout,
                 'latest_month': latest['month'],
                 'latest_value': latest_val,
-                'mom': mom,
-                'qoq': qoq,
-                'half': half,
-                'trend': trend_text(mom),
-                'signal': signal_class(mom),
-                'total_samples': total_samples,
-                'real_months': real_months,
-                'baseline_months': len(pts) - real_months,
-                'latest_has_real': latest_has_real,
-                'latest_source_label': latest_source_label,
+                'mom': pct_change(latest_val, prev_1) if prev_1 else 0,
+                'qoq': pct_change(latest_val, prev_3) if prev_3 else 0,
+                'half': pct_change(latest_val, prev_6) if prev_6 else 0,
+                'trend': trend_text(pct_change(latest_val, prev_1) if prev_1 else 0),
+                'signal': signal_class(pct_change(latest_val, prev_1) if prev_1 else 0),
+                'month_count': len(pts),
             })
     cards.sort(key=lambda x: (x['community'], x['layout']))
     return cards
@@ -118,11 +102,11 @@ def build_rankings(trend_cards, key_name, title, limit=8, reverse=True):
     for idx, item in enumerate(items, 1):
         rows.append(
             f'<tr data-community="{esc(item["community"])}" data-layout="{esc(item["layout"])}">'
-            f'<td>{idx}</td><td>{esc(item["community"])}</td><td>{esc(item["layout"])}</td><td>{item[key_name]:+.2f}%</td><td>{esc(item["latest_month"])}</td><td>{item["real_months"]}</td></tr>'
+            f'<td>{idx}</td><td>{esc(item["community"])}</td><td>{esc(item["layout"])}</td><td>{item[key_name]:+.2f}%</td><td>{esc(item["latest_month"])}</td><td>{item["month_count"]}</td></tr>'
         )
     return (
         f'<section><h3>{esc(title)}</h3>'
-        '<table><thead><tr><th>#</th><th>社區</th><th>房型</th><th>變化</th><th>最新月份</th><th>real 月數</th></tr></thead>'
+        '<table><thead><tr><th>#</th><th>社區</th><th>房型</th><th>變化</th><th>最新月份</th><th>月份數</th></tr></thead>'
         f'<tbody>{"".join(rows)}</tbody></table></section>'
     )
 
@@ -178,8 +162,6 @@ def svg_line_chart(series_map, title, chart_id):
         coords = []
         dots = []
         plotted = []
-        real_count = sum(1 for p in points if p.get('has_real'))
-        total_count = len(points)
         for idx, month in enumerate(all_months):
             point = month_to_point.get(month)
             if not point:
@@ -188,14 +170,12 @@ def svg_line_chart(series_map, title, chart_id):
             x = x_of(idx)
             y = y_of(value)
             coords.append(f'{x:.1f},{y:.1f}')
-            plotted.append((x, y, point))
-            point_fill = color if point.get('has_real') else '#ffffff'
-            point_note = '含真實樣本' if point.get('has_real') else '僅 baseline'
-            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.6" fill="{point_fill}" stroke="{color}" stroke-width="2"><title>{esc(label)} {esc(month)}: 價格指標 {value:.2f} 萬/坪 (n={point["sample_count"]}, {point_note})</title></circle>')
+            plotted.append((x, y))
+            dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.6" fill="#ffffff" stroke="{color}" stroke-width="2"><title>{esc(label)} {esc(month)}: 價格指標 {value:.2f} 萬/坪</title></circle>')
         if coords:
             label_text = ''
             if plotted:
-                lx, ly, _ = plotted[-1]
+                lx, ly = plotted[-1]
                 label_text = f'<text x="{min(lx + 10, width - 4):.1f}" y="{max(ly + 4, 16):.1f}" font-size="12" font-weight="700" fill="{color}">{esc(label)}</text>'
             dash_attr = f' stroke-dasharray="{dash}"' if dash else ''
             series_blocks.append(
@@ -206,8 +186,7 @@ def svg_line_chart(series_map, title, chart_id):
             legends.append(
                 f'<button type="button" class="legend-item is-active" data-chart="{esc(chart_id)}" data-series="{esc(label)}" aria-pressed="true">'
                 f'<span class="legend-swatch" style="background:{color}; border:2px solid {color};"></span>'
-                f'<span class="legend-name">{esc(label)}</span>'
-                f'<span class="legend-meta">{real_count}/{total_count}</span></button>'
+                f'<span class="legend-name">{esc(label)}</span></button>'
             )
 
     return f'''
@@ -215,7 +194,7 @@ def svg_line_chart(series_map, title, chart_id):
       <div class="chart-head">
         <div>
           <h3>{esc(title)}</h3>
-          <p class="muted">價格走勢圖。實心點＝含 real data，空心點＝只有 baseline。legend 右側數字為「含 real 月數 / 總月數」。</p>
+          <p class="muted">顯示各社區在該房型下的每月價格走勢。</p>
         </div>
         <div class="legend legend-buttons">{"".join(legends)}</div>
       </div>
@@ -239,16 +218,12 @@ def main():
         if not row.get('observed_month') and row.get('observed_at'):
             row['observed_month'] = str(row['observed_at'])[:7]
 
-    by_region = defaultdict(list)
     by_community = defaultdict(list)
     by_series = defaultdict(list)
     for row in rows:
-        if row.get('region'):
-            by_region[row['region']].append(row)
         if row.get('community'):
             by_community[row['community']].append(row)
-        layout = row.get('layout_type') or '未分類'
-        if row.get('community'):
+            layout = row.get('layout_type') or '未分類'
             by_series[(row['community'], layout, row.get('observed_month', ''))].append(row)
 
     communities = sorted(by_community)
@@ -258,9 +233,6 @@ def main():
     for (community, layout, month), items in sorted(by_series.items()):
         unit_prices = [x.get('unit_price', 0) for x in items]
         total_prices = [x.get('total_price', 0) for x in items]
-        sources_list = sorted({x.get('source', '') for x in items if x.get('source')})
-        has_real = any(x.get('source') != 'public-baseline' for x in items)
-        has_baseline = any(x.get('source') == 'public-baseline' for x in items)
         series_export.append({
             'community': community,
             'layout_type': layout,
@@ -271,9 +243,6 @@ def main():
             'min_unit_price': round(min([v for v in unit_prices if isinstance(v, (int, float)) and v > 0], default=0), 2),
             'max_unit_price': round(max([v for v in unit_prices if isinstance(v, (int, float)) and v > 0], default=0), 2),
             'avg_total_price': round(avg(total_prices), 1),
-            'sources': sources_list,
-            'has_real': has_real,
-            'has_baseline': has_baseline
         })
 
     SERIES_CACHE_PATH.write_text(json.dumps(series_export, ensure_ascii=False, indent=2))
@@ -283,7 +252,6 @@ def main():
     up_count = sum(1 for x in trend_cards if x['signal'] == 'up')
     down_count = sum(1 for x in trend_cards if x['signal'] == 'down')
     flat_count = sum(1 for x in trend_cards if x['signal'] == 'flat')
-    baseline_only_count = sum(1 for x in trend_cards if x['real_months'] == 0)
 
     summary_cards = [
         ('追蹤社區', str(len(communities))),
@@ -293,7 +261,6 @@ def main():
         ('本月上升組合', str(up_count)),
         ('本月下降組合', str(down_count)),
         ('本月持平組合', str(flat_count)),
-        ('全 baseline 組合', str(baseline_only_count)),
     ]
     summary_html = ''.join(
         f'<div class="card stat-card"><div class="eyebrow">{esc(label)}</div><h2>{esc(value)}</h2></div>'
@@ -312,9 +279,8 @@ def main():
           <p>月變化：<strong>{item['mom']:+.2f}%</strong></p>
           <p>3 個月變化：<strong>{item['qoq']:+.2f}%</strong></p>
           <p>6 個月變化：<strong>{item['half']:+.2f}%</strong></p>
-          <p>資料筆數：<strong>{item['total_samples']}</strong></p>
-          <p>資料狀態：<strong>{esc(item['latest_source_label'])}</strong></p>
-          <p class="muted">real 月數：{item['real_months']}｜baseline 月數：{item['baseline_months']}</p>
+          <p>月份數：<strong>{item['month_count']}</strong></p>
+          <p class="muted">短期趨勢：{esc(item['trend'])}</p>
         </div>
         ''')
 
@@ -322,11 +288,9 @@ def main():
     for community in communities:
         layouts_present = sorted({x['layout_type'] for x in series_export if x['community'] == community})
         row_count = sum(1 for x in rows if x.get('community') == community)
-        real_rows = sum(1 for x in rows if x.get('community') == community and x.get('source') != 'public-baseline')
-        baseline_rows = sum(1 for x in rows if x.get('community') == community and x.get('source') == 'public-baseline')
         region = next((x.get('region', '') for x in rows if x.get('community') == community), '')
         coverage_rows.append(
-            f'<tr data-community="{esc(community)}"><td>{esc(community)}</td><td>{esc(region)}</td><td>{row_count}</td><td>{real_rows}</td><td>{baseline_rows}</td><td>{len(layouts_present)}</td><td>{", ".join(esc(x) for x in layouts_present) or "—"}</td></tr>'
+            f'<tr data-community="{esc(community)}"><td>{esc(community)}</td><td>{esc(region)}</td><td>{row_count}</td><td>{len(layouts_present)}</td><td>{", ".join(esc(x) for x in layouts_present) or "—"}</td></tr>'
         )
 
     focus_chart_blocks = []
@@ -370,7 +334,6 @@ def main():
     .legend-item {{ display:inline-flex; align-items:center; gap:6px; font-size:13px; color:#374151; background:white; border:1px solid #d1d5db; border-radius:999px; padding:6px 10px; cursor:pointer; white-space:nowrap; }}
     .legend-item.is-muted {{ opacity:.45; }}
     .legend-swatch {{ width:12px; height:12px; border-radius:999px; display:inline-block; flex:0 0 auto; }}
-    .legend-meta {{ font-size:12px; color:#6b7280; }}
     .chart {{ width:100%; height:auto; margin-top:12px; }}
     .chart-series.is-hidden {{ opacity:.12; }}
     .mobile-hint {{ margin-top:8px; font-size:13px; }}
@@ -407,20 +370,9 @@ def main():
     <section class="hero">
       <h1>淡水房市追蹤 Dashboard</h1>
       <p class="muted">重點看每月價格變化與資料覆蓋狀態，不展示逐筆個案明細。</p>
-      <p>目前觀察區域：{', '.join(esc(x) for x in watchlist.get('regions', []))}</p>
-      <p>房型分類：{', '.join(esc(x) for x in watchlist.get('layout_types', []))}</p>
-      <div class="controls">
-        <div class="control">
-          <label for="communityFilter">篩選社區</label>
-          <select id="communityFilter">{''.join(community_options)}</select>
-        </div>
-        <div class="control">
-          <label for="layoutFilter">篩選房型</label>
-          <select id="layoutFilter">{''.join(layout_options)}</select>
-        </div>
-      </div>
       <div class="tabbar" role="tablist">
         <button class="tab-btn active" data-tab="overview" role="tab">總覽</button>
+        <button class="tab-btn" data-tab="monthly" role="tab">月變化摘要</button>
         <button class="tab-btn" data-tab="trends" role="tab">走勢</button>
         <button class="tab-btn" data-tab="ranking" role="tab">排行</button>
         <button class="tab-btn" data-tab="coverage" role="tab">資料覆蓋</button>
@@ -432,23 +384,30 @@ def main():
         <h2>總覽</h2>
         <div class="grid">{summary_html}</div>
       </section>
+    </section>
+
+    <section class="tab-panel" data-panel="monthly">
+      <section class="card">
+        <h2>月變化摘要篩選</h2>
+        <div class="controls">
+          <div class="control">
+            <label for="communityFilter">篩選社區</label>
+            <select id="communityFilter">{''.join(community_options)}</select>
+          </div>
+          <div class="control">
+            <label for="layoutFilter">篩選房型</label>
+            <select id="layoutFilter">{''.join(layout_options)}</select>
+          </div>
+        </div>
+      </section>
       <section>
         <h2>月度價格變化摘要</h2>
-        <p class="muted">每張卡都會標示目前是「本月含 real data」、「本月 baseline／歷史曾含 real」，或「目前全為 baseline」，避免把 baseline 當成真實成交。</p>
         <div class="grid" id="trendCardGrid">{''.join(trend_card_html) or '<div class="card">目前尚無足夠資料可計算月度變化</div>'}</div>
         {trend_toggle_button}
       </section>
     </section>
 
     <section class="tab-panel" data-panel="trends">
-      <section class="card">
-        <h2>走勢圖說明</h2>
-        <ul>
-          <li>每條線代表一個社區在該房型下的月度價格走勢。</li>
-          <li>legend 右側的 <strong>real 月數 / 總月數</strong> 可直接看出這條線有多少月份是真資料、多少只是 baseline。</li>
-          <li>預設會顯示所有追蹤社區，沒有只偏向摩納哥。</li>
-        </ul>
-      </section>
       {''.join(focus_chart_blocks) or '<div class="card">目前沒有可顯示的趨勢圖</div>'}
     </section>
 
@@ -460,25 +419,28 @@ def main():
       <section>
         <h2>每個社區的資料比數</h2>
         <table id="coverage-table">
-          <thead><tr><th>社區</th><th>區域</th><th>總筆數</th><th>real 筆數</th><th>baseline 筆數</th><th>已覆蓋房型數</th><th>房型</th></tr></thead>
-          <tbody>{''.join(coverage_rows) or '<tr><td colspan="7">尚無覆蓋資料</td></tr>'}</tbody>
+          <thead><tr><th>社區</th><th>區域</th><th>總筆數</th><th>已覆蓋房型數</th><th>房型</th></tr></thead>
+          <tbody>{''.join(coverage_rows) or '<tr><td colspan="5">尚無覆蓋資料</td></tr>'}</tbody>
         </table>
       </section>
       <section class="card">
         <h2>資料說明</h2>
         <ul>
-          <li>這個 dashboard 目前以「社區 × 房型 × 月份」的價格時間序列為主。</li>
-          <li>前台不展示逐筆 raw data，也不強調平均數 / 中位數的統計字樣，避免在 real data 稀少時造成過度解讀。</li>
-          <li>月度價格變化卡會直接標示該組合目前是 baseline 為主，還是本月真的有 real data。</li>
+          <li>目前資料只保留 baseline 序列，不再顯示或依賴 real data。</li>
+          <li>月變化摘要已獨立成分頁，篩選只作用在那一頁。</li>
+          <li>走勢圖與排行都以所有追蹤社區、所有房型為基礎。</li>
         </ul>
       </section>
     </section>
   </div>
   <script>
-    function applyFilters() {{
-      const community = document.getElementById('communityFilter').value;
-      const layout = document.getElementById('layoutFilter').value;
-      document.querySelectorAll('[data-community], [data-layout]').forEach((row) => {{
+    function applyMonthlyFilters() {{
+      const communityEl = document.getElementById('communityFilter');
+      const layoutEl = document.getElementById('layoutFilter');
+      if (!communityEl || !layoutEl) return;
+      const community = communityEl.value;
+      const layout = layoutEl.value;
+      document.querySelectorAll('#trendCardGrid [data-community]').forEach((row) => {{
         const rowCommunity = row.dataset.community || '';
         const rowLayout = row.dataset.layout || '';
         const okCommunity = !community || rowCommunity === community;
@@ -527,11 +489,14 @@ def main():
     tabButtons.forEach((btn) => {{
       btn.addEventListener('click', () => activateTab(btn.dataset.tab));
     }});
-    document.getElementById('communityFilter').addEventListener('change', applyFilters);
-    document.getElementById('layoutFilter').addEventListener('change', applyFilters);
+
+    const communityFilter = document.getElementById('communityFilter');
+    const layoutFilter = document.getElementById('layoutFilter');
+    if (communityFilter) communityFilter.addEventListener('change', applyMonthlyFilters);
+    if (layoutFilter) layoutFilter.addEventListener('change', applyMonthlyFilters);
 
     activateTab(savedTab);
-    applyFilters();
+    applyMonthlyFilters();
     setupLegendToggles();
     setupTrendToggle();
   </script>
