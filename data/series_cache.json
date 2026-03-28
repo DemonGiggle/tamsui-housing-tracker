@@ -1287,6 +1287,61 @@
     "avg_total_price": 3000.0
   },
   {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "2房",
+    "month": "2025-05",
+    "sample_count": 1,
+    "avg_unit_price": 25.09,
+    "median_unit_price": 25.09,
+    "min_unit_price": 25.09,
+    "max_unit_price": 25.09,
+    "avg_total_price": 200.0
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "2房",
+    "month": "2025-06",
+    "sample_count": 1,
+    "avg_unit_price": 37.14,
+    "median_unit_price": 37.14,
+    "min_unit_price": 37.14,
+    "max_unit_price": 37.14,
+    "avg_total_price": 888.0
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "3房",
+    "month": "2025-05",
+    "sample_count": 1,
+    "avg_unit_price": 29.71,
+    "median_unit_price": 29.71,
+    "min_unit_price": 29.71,
+    "max_unit_price": 29.71,
+    "avg_total_price": 1400.0
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "3房",
+    "month": "2025-06",
+    "sample_count": 1,
+    "avg_unit_price": 37.75,
+    "median_unit_price": 37.75,
+    "min_unit_price": 37.75,
+    "max_unit_price": 37.75,
+    "avg_total_price": 1750.0
+  },
+  {
+    "community": "托斯卡尼翡冷翠",
+    "layout_type": "3房",
+    "month": "2025-09",
+    "sample_count": 1,
+    "avg_unit_price": 35.09,
+    "median_unit_price": 35.09,
+    "min_unit_price": 35.09,
+    "max_unit_price": 35.09,
+    "avg_total_price": 1628.0
+  },
+  {
     "community": "托斯卡尼麥迪奇名家",
     "layout_type": "1房",
     "month": "2023-01",
@@ -2071,33 +2126,33 @@
     "community": "托斯卡尼麥迪奇名家",
     "layout_type": "2房",
     "month": "2025-09",
-    "sample_count": 1,
-    "avg_unit_price": 33.05,
-    "median_unit_price": 33.05,
+    "sample_count": 2,
+    "avg_unit_price": 35.52,
+    "median_unit_price": 35.52,
     "min_unit_price": 33.05,
-    "max_unit_price": 33.05,
-    "avg_total_price": 1140.0
+    "max_unit_price": 37.99,
+    "avg_total_price": 1239.0
   },
   {
     "community": "托斯卡尼麥迪奇名家",
     "layout_type": "2房",
     "month": "2025-10",
-    "sample_count": 1,
-    "avg_unit_price": 33.05,
-    "median_unit_price": 33.05,
-    "min_unit_price": 33.05,
+    "sample_count": 2,
+    "avg_unit_price": 31.25,
+    "median_unit_price": 31.25,
+    "min_unit_price": 29.45,
     "max_unit_price": 33.05,
-    "avg_total_price": 1140.0
+    "avg_total_price": 1170.0
   },
   {
     "community": "托斯卡尼麥迪奇名家",
     "layout_type": "2房",
     "month": "2025-11",
-    "sample_count": 1,
-    "avg_unit_price": 33.05,
+    "sample_count": 3,
+    "avg_unit_price": 33.03,
     "median_unit_price": 33.05,
-    "min_unit_price": 33.05,
-    "max_unit_price": 33.05,
+    "min_unit_price": 30.45,
+    "max_unit_price": 35.6,
     "avg_total_price": 1140.0
   },
   {
@@ -2574,6 +2629,17 @@
     "avg_total_price": 1577.5
   },
   {
+    "community": "托斯卡尼麥迪奇名家",
+    "layout_type": "未分類",
+    "month": "2025-12",
+    "sample_count": 1,
+    "avg_unit_price": 42.18,
+    "median_unit_price": 42.18,
+    "min_unit_price": 42.18,
+    "max_unit_price": 42.18,
+    "avg_total_price": 1725.0
+  },
+  {
     "community": "摩納哥社區",
     "layout_type": "1房",
     "month": "2023-01",
@@ -2962,12 +3028,12 @@
     "community": "摩納哥社區",
     "layout_type": "1房",
     "month": "2025-12",
-    "sample_count": 1,
-    "avg_unit_price": 43.1,
-    "median_unit_price": 43.1,
-    "min_unit_price": 43.1,
+    "sample_count": 2,
+    "avg_unit_price": 38.36,
+    "median_unit_price": 38.36,
+    "min_unit_price": 33.62,
     "max_unit_price": 43.1,
-    "avg_total_price": 603.0
+    "avg_total_price": 656.5
   },
   {
     "community": "摩納哥社區",
@@ -3391,23 +3457,23 @@
     "community": "摩納哥社區",
     "layout_type": "2房",
     "month": "2025-12",
-    "sample_count": 1,
-    "avg_unit_price": 47.1,
-    "median_unit_price": 47.1,
+    "sample_count": 2,
+    "avg_unit_price": 47.28,
+    "median_unit_price": 47.28,
     "min_unit_price": 47.1,
-    "max_unit_price": 47.1,
-    "avg_total_price": 1284.0
+    "max_unit_price": 47.46,
+    "avg_total_price": 1242.0
   },
   {
     "community": "摩納哥社區",
     "layout_type": "2房",
     "month": "2026-01",
-    "sample_count": 1,
-    "avg_unit_price": 47.1,
+    "sample_count": 3,
+    "avg_unit_price": 45.29,
     "median_unit_price": 47.1,
-    "min_unit_price": 47.1,
-    "max_unit_price": 47.1,
-    "avg_total_price": 1284.0
+    "min_unit_price": 38.18,
+    "max_unit_price": 50.58,
+    "avg_total_price": 1234.7
   },
   {
     "community": "摩納哥社區",
@@ -3859,6 +3925,72 @@
     "min_unit_price": 38.3,
     "max_unit_price": 38.3,
     "avg_total_price": 1500.0
+  },
+  {
+    "community": "摩納哥社區",
+    "layout_type": "未分類",
+    "month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 42.47,
+    "median_unit_price": 42.47,
+    "min_unit_price": 42.47,
+    "max_unit_price": 42.47,
+    "avg_total_price": 618.0
+  },
+  {
+    "community": "水立方",
+    "layout_type": "2房",
+    "month": "2025-09",
+    "sample_count": 1,
+    "avg_unit_price": 44.2,
+    "median_unit_price": 44.2,
+    "min_unit_price": 44.2,
+    "max_unit_price": 44.2,
+    "avg_total_price": 2200.0
+  },
+  {
+    "community": "水立方",
+    "layout_type": "4房以上",
+    "month": "2025-01",
+    "sample_count": 1,
+    "avg_unit_price": 30.83,
+    "median_unit_price": 30.83,
+    "min_unit_price": 30.83,
+    "max_unit_price": 30.83,
+    "avg_total_price": 2720.0
+  },
+  {
+    "community": "水立方",
+    "layout_type": "4房以上",
+    "month": "2025-05",
+    "sample_count": 1,
+    "avg_unit_price": 33.28,
+    "median_unit_price": 33.28,
+    "min_unit_price": 33.28,
+    "max_unit_price": 33.28,
+    "avg_total_price": 5900.0
+  },
+  {
+    "community": "水立方",
+    "layout_type": "4房以上",
+    "month": "2025-06",
+    "sample_count": 1,
+    "avg_unit_price": 34.74,
+    "median_unit_price": 34.74,
+    "min_unit_price": 34.74,
+    "max_unit_price": 34.74,
+    "avg_total_price": 5980.0
+  },
+  {
+    "community": "水立方",
+    "layout_type": "4房以上",
+    "month": "2025-08",
+    "sample_count": 1,
+    "avg_unit_price": 34.74,
+    "median_unit_price": 34.74,
+    "min_unit_price": 34.74,
+    "max_unit_price": 34.74,
+    "avg_total_price": 5980.0
   },
   {
     "community": "清淞",
