@@ -77,3 +77,36 @@ When adding more sources, prefer extending raw rows with:
 3. add raw ingestion first
 4. validate community matching on the 13-community watchlist
 5. only then expose newly supported communities on charts/cards
+
+
+## Candidate assessment (2026-03-28)
+
+### Recommended second source: Sinyi community pages
+- Example verified pages:
+  - 摩納哥: https://www.sinyi.com.tw/communitylist/communityinfo/0009663
+  - 台北灣 sample page fetched successfully: https://www.sinyi.com.tw/communitylist/communityinfo/0010758
+- Why this is the best current second source:
+  - plain `web_fetch` text extraction already works
+  - community-level pages align with the current watchlist model
+  - page text includes transaction month, address/floor, total price, unit price, size, layout, building age
+  - also exposes basic community metadata useful for validation
+- Cautions:
+  - page text is dense and may need robust parsing
+  - site-specific IDs will need a community mapping layer
+  - some fields may mix site-calculated metrics with official record excerpts, so raw extraction should preserve context
+
+### Other candidates worth evaluating later
+- Yungching community / evertrust pages
+  - promising, but quick fetch extraction was less reliable in the current tool path
+- 591 market/community pages
+  - likely useful for market context and community discovery
+  - may be more JS-heavy and require a more careful fetch path
+- Sinyi tradeinfo / broader transaction pages
+  - potentially useful as a transaction-oriented source after community-page ingestion is stable
+
+## Recommended implementation order
+1. add a `source_registry` mapping file for community -> second-source URL/id
+2. create `scripts/fetch_latest_sinyi_community_data.py`
+3. ingest raw rows into `observations.json` with explicit `source`, `source_url`, `raw_hash`
+4. keep new rows separated from display until parsing quality is reviewed
+5. only then decide which Sinyi-derived rows are eligible for public dashboard use
