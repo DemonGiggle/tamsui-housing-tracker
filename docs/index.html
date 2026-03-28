@@ -52,20 +52,21 @@
   <div class="wrap">
     <section class="hero">
       <h1>淡水房市追蹤 Dashboard</h1>
-      <p class="muted">重點看每月價格變化與資料覆蓋狀態，不展示逐筆個案明細。</p>
+      <p class="muted">先列完整觀察清單，再區分哪些社區目前已有可展示資料；沒資料的社區保留在清單裡，明確標示為待補資料。</p>
       <div class="tabbar" role="tablist">
         <button class="tab-btn active" data-tab="overview" role="tab">總覽</button>
         <button class="tab-btn" data-tab="monthly" role="tab">月變化摘要</button>
         <button class="tab-btn" data-tab="trends" role="tab">走勢</button>
         <button class="tab-btn" data-tab="ranking" role="tab">排行</button>
-        <button class="tab-btn" data-tab="coverage" role="tab">資料覆蓋</button>
+        <button class="tab-btn" data-tab="coverage" role="tab">觀察清單／覆蓋</button>
+        <button class="tab-btn" data-tab="sources" role="tab">資料來源</button>
       </div>
     </section>
 
     <section class="tab-panel active" data-panel="overview">
       <section>
         <h2>總覽</h2>
-        <div class="grid"><div class="card stat-card"><div class="eyebrow">追蹤社區</div><h2>7</h2></div><div class="card stat-card"><div class="eyebrow">房型數</div><h2>4</h2></div><div class="card stat-card"><div class="eyebrow">追蹤月份</div><h2>39</h2></div><div class="card stat-card"><div class="eyebrow">最新月份</div><h2>2026-03</h2></div><div class="card stat-card"><div class="eyebrow">本月上升組合</div><h2>0</h2></div><div class="card stat-card"><div class="eyebrow">本月下降組合</div><h2>0</h2></div><div class="card stat-card"><div class="eyebrow">本月持平組合</div><h2>22</h2></div></div>
+        <div class="grid"><div class="card stat-card"><div class="eyebrow">觀察清單社區</div><h2>13</h2></div><div class="card stat-card"><div class="eyebrow">目前有資料社區</div><h2>7</h2></div><div class="card stat-card"><div class="eyebrow">房型數</div><h2>4</h2></div><div class="card stat-card"><div class="eyebrow">追蹤月份</div><h2>39</h2></div><div class="card stat-card"><div class="eyebrow">最新月份</div><h2>2026-03</h2></div><div class="card stat-card"><div class="eyebrow">本月上升組合</div><h2>0</h2></div><div class="card stat-card"><div class="eyebrow">本月下降組合</div><h2>0</h2></div><div class="card stat-card"><div class="eyebrow">本月持平組合</div><h2>22</h2></div></div>
       </section>
     </section>
 
@@ -436,19 +437,27 @@
 
     <section class="tab-panel" data-panel="coverage">
       <section>
-        <h2>每個社區的資料比數</h2>
+        <h2>觀察清單與資料覆蓋</h2>
         <table id="coverage-table">
-          <thead><tr><th>社區</th><th>區域</th><th>總筆數</th><th>已覆蓋房型數</th><th>房型</th></tr></thead>
-          <tbody><tr data-community="尚海"><td>尚海</td><td>淡水</td><td>117</td><td>3</td><td>2房, 3房, 4房以上</td></tr><tr data-community="托斯卡尼麥迪奇名家"><td>托斯卡尼麥迪奇名家</td><td>淡水</td><td>117</td><td>3</td><td>1房, 2房, 3房</td></tr><tr data-community="摩納哥社區"><td>摩納哥社區</td><td>淡水</td><td>117</td><td>3</td><td>1房, 2房, 3房</td></tr><tr data-community="清淞"><td>清淞</td><td>淡水</td><td>117</td><td>3</td><td>1房, 2房, 3房</td></tr><tr data-community="荷雅名人館"><td>荷雅名人館</td><td>淡水</td><td>156</td><td>4</td><td>1房, 2房, 3房, 4房以上</td></tr><tr data-community="荷雅時尚館"><td>荷雅時尚館</td><td>淡水</td><td>117</td><td>3</td><td>1房, 2房, 3房</td></tr><tr data-community="高第"><td>高第</td><td>淡水</td><td>117</td><td>3</td><td>1房, 2房, 3房</td></tr></tbody>
+          <thead><tr><th>社區</th><th>區域</th><th>狀態</th><th>總筆數</th><th>已覆蓋房型數</th><th>最新月份</th><th>房型</th></tr></thead>
+          <tbody><tr data-community="摩納哥社區"><td>摩納哥社區</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>1房, 2房, 3房</td></tr><tr data-community="水立方"><td>水立方</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr><tr data-community="托斯卡尼翡冷翠"><td>托斯卡尼翡冷翠</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr><tr data-community="托斯卡尼麥迪奇名家"><td>托斯卡尼麥迪奇名家</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>1房, 2房, 3房</td></tr><tr data-community="荷雅名人館"><td>荷雅名人館</td><td>淡水</td><td>有資料</td><td>156</td><td>4</td><td>2026-03</td><td>1房, 2房, 3房, 4房以上</td></tr><tr data-community="荷雅時尚館"><td>荷雅時尚館</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>1房, 2房, 3房</td></tr><tr data-community="尚海"><td>尚海</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>2房, 3房, 4房以上</td></tr><tr data-community="清淞"><td>清淞</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>1房, 2房, 3房</td></tr><tr data-community="高第"><td>高第</td><td>淡水</td><td>有資料</td><td>117</td><td>3</td><td>2026-03</td><td>1房, 2房, 3房</td></tr><tr data-community="西恩那社區"><td>西恩那社區</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr><tr data-community="印象法蘭"><td>印象法蘭</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr><tr data-community="布拉諾"><td>布拉諾</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr><tr data-community="麗景社區"><td>麗景社區</td><td>淡水</td><td>待補資料</td><td>0</td><td>0</td><td>—</td><td>—</td></tr></tbody>
         </table>
       </section>
+    </section>
+
+    <section class="tab-panel" data-panel="sources">
+      <section>
+        <h2>資料來源現況</h2>
+        <div class="grid"><div class="card"><div class="eyebrow">目前主要來源</div><p>community.houseprice.tw 社區頁資料</p></div><div class="card"><div class="eyebrow">目前站內展示資料</div><p>只展示可解釋、可追溯來源的資料；待補資料社區仍保留在觀察清單</p></div><div class="card"><div class="eyebrow">下一步擴充方向</div><p>加入第二、第三個公開來源，先擴覆蓋，再決定哪些資料能進展示層</p></div></div>
+      </section>
       <section class="card">
-        <h2>資料說明</h2>
-        <ul>
-          <li>目前資料只保留 baseline 序列，不再顯示或依賴 real data。</li>
-          <li>月變化摘要已獨立成分頁，篩選只作用在那一頁。</li>
-          <li>走勢圖與排行都以所有追蹤社區、所有房型為基礎。</li>
-        </ul>
+        <h2>下一步擴充建議</h2>
+        <ol>
+          <li>保留目前社區頁來源，持續抓社區級價格資訊與欄位。</li>
+          <li>新增第 2 個公開來源，優先補目前觀察清單裡尚無可公開資料的社區。</li>
+          <li>原始資料層維持 source、source_url、raw_hash，後續補上 fetched_at、來源型別與比對信心欄位。</li>
+          <li>展示層只使用能解釋來源的資料，不再用 fallback 補滿畫面。</li>
+        </ol>
       </section>
     </section>
   </div>

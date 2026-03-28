@@ -211,6 +211,21 @@ def svg_line_chart(series_map, title, chart_id):
     '''
 
 
+def watched_communities_from_watchlist(watchlist):
+    names = []
+    for item in watchlist.get('communities', []):
+        if isinstance(item, dict):
+            name = item.get('name')
+            if name and name not in names:
+                names.append(name)
+            for nearby in item.get('nearby_communities', []):
+                if nearby and nearby not in names:
+                    names.append(nearby)
+        elif item and item not in names:
+            names.append(item)
+    return names
+
+
 def main():
     rows = load_json(DATA_PATH, [])
     watchlist = load_json(WATCHLIST_PATH, {'regions': [], 'communities': [], 'layout_types': []})
@@ -218,6 +233,8 @@ def main():
     for row in rows:
         if not row.get('observed_month') and row.get('observed_at'):
             row['observed_month'] = str(row['observed_at'])[:7]
+
+    watchlist_communities = watched_communities_from_watchlist(watchlist)
 
     by_community = defaultdict(list)
     by_series = defaultdict(list)
@@ -227,7 +244,12 @@ def main():
             layout = row.get('layout_type') or '未分類'
             by_series[(row['community'], layout, row.get('observed_month', ''))].append(row)
 
-    communities = sorted(by_community)
+    data_communities = sorted(by_community)
+    display_communities = watchlist_communities[:] if watchlist_communities else data_communities[:]
+    for community in data_communities:
+        if community not in display_communities:
+            display_communities.append(community)
+
     all_layouts = sorted({(x.get('layout_type') or '未分類') for x in rows})
 
     series_export = []
@@ -248,14 +270,15 @@ def main():
 
     SERIES_CACHE_PATH.write_text(json.dumps(series_export, ensure_ascii=False, indent=2))
 
-    trend_cards = build_trend_summary(series_export, communities, all_layouts)
+    trend_cards = build_trend_summary(series_export, data_communities, all_layouts)
     latest_month = max((x['latest_month'] for x in trend_cards), default='—')
     up_count = sum(1 for x in trend_cards if x['signal'] == 'up')
     down_count = sum(1 for x in trend_cards if x['signal'] == 'down')
     flat_count = sum(1 for x in trend_cards if x['signal'] == 'flat')
 
     summary_cards = [
-        ('追蹤社區', str(len(communities))),
+        ('觀察清單社區', str(len(display_communities))),
+        ('目前有資料社區', str(len(data_communities))),
         ('房型數', str(len(all_layouts))),
         ('追蹤月份', str(len(sorted({x[2] for x in by_series.keys()})))),
         ('最新月份', latest_month),
@@ -287,18 +310,20 @@ def main():
         ''')
 
     coverage_rows = []
-    for community in communities:
+    for community in display_communities:
         layouts_present = sorted({x['layout_type'] for x in series_export if x['community'] == community})
         row_count = sum(1 for x in rows if x.get('community') == community)
-        region = next((x.get('region', '') for x in rows if x.get('community') == community), '')
+        region = next((x.get('region', '') for x in rows if x.get('community') == community), '淡水')
+        latest = max((x.get('observed_month') for x in rows if x.get('community') == community and x.get('observed_month')), default='—')
+        status = '有資料' if row_count else '待補資料'
         coverage_rows.append(
-            f'<tr data-community="{esc(community)}"><td>{esc(community)}</td><td>{esc(region)}</td><td>{row_count}</td><td>{len(layouts_present)}</td><td>{", ".join(esc(x) for x in layouts_present) or "—"}</td></tr>'
+            f'<tr data-community="{esc(community)}"><td>{esc(community)}</td><td>{esc(region)}</td><td>{esc(status)}</td><td>{row_count}</td><td>{len(layouts_present)}</td><td>{esc(latest)}</td><td>{", ".join(esc(x) for x in layouts_present) or "—"}</td></tr>'
         )
 
     focus_chart_blocks = []
     for layout in all_layouts:
         series_map = {}
-        for community in communities:
+        for community in data_communities:
             pts = [s for s in series_export if s['community'] == community and s['layout_type'] == layout]
             if pts:
                 series_map[community] = pts
@@ -311,11 +336,21 @@ def main():
         build_rankings(trend_cards, 'half', '近 6 月上升排行', reverse=True)
     )
 
-    community_options = ['<option value="">全部社區</option>'] + [f'<option value="{esc(c)}">{esc(c)}</option>' for c in communities]
+    community_options = ['<option value="">全部社區</option>'] + [f'<option value="{esc(c)}">{esc(c)}</option>' for c in data_communities]
     layout_options = ['<option value="">全部房型</option>'] + [f'<option value="{esc(l)}">{esc(l)}</option>' for l in all_layouts]
     trend_toggle_button = ''
     if len(trend_cards) > 12:
         trend_toggle_button = '<button id="toggleTrendCards" class="toggle-btn" type="button">顯示更多</button>'
+
+    source_cards = [
+        ('目前主要來源', 'community.houseprice.tw 社區頁資料'),
+        ('目前站內展示資料', '只展示可解釋、可追溯來源的資料；待補資料社區仍保留在觀察清單'),
+        ('下一步擴充方向', '加入第二、第三個公開來源，先擴覆蓋，再決定哪些資料能進展示層'),
+    ]
+    source_cards_html = ''.join(
+        f'<div class="card"><div class="eyebrow">{esc(label)}</div><p>{esc(value)}</p></div>'
+        for label, value in source_cards
+    )
 
     html = f'''<!doctype html>
 <html lang="zh-Hant">
@@ -371,13 +406,14 @@ def main():
   <div class="wrap">
     <section class="hero">
       <h1>淡水房市追蹤 Dashboard</h1>
-      <p class="muted">重點看每月價格變化與資料覆蓋狀態，不展示逐筆個案明細。</p>
+      <p class="muted">先列完整觀察清單，再區分哪些社區目前已有可展示資料；沒資料的社區保留在清單裡，明確標示為待補資料。</p>
       <div class="tabbar" role="tablist">
         <button class="tab-btn active" data-tab="overview" role="tab">總覽</button>
         <button class="tab-btn" data-tab="monthly" role="tab">月變化摘要</button>
         <button class="tab-btn" data-tab="trends" role="tab">走勢</button>
         <button class="tab-btn" data-tab="ranking" role="tab">排行</button>
-        <button class="tab-btn" data-tab="coverage" role="tab">資料覆蓋</button>
+        <button class="tab-btn" data-tab="coverage" role="tab">觀察清單／覆蓋</button>
+        <button class="tab-btn" data-tab="sources" role="tab">資料來源</button>
       </div>
     </section>
 
@@ -419,19 +455,27 @@ def main():
 
     <section class="tab-panel" data-panel="coverage">
       <section>
-        <h2>每個社區的資料比數</h2>
+        <h2>觀察清單與資料覆蓋</h2>
         <table id="coverage-table">
-          <thead><tr><th>社區</th><th>區域</th><th>總筆數</th><th>已覆蓋房型數</th><th>房型</th></tr></thead>
-          <tbody>{''.join(coverage_rows) or '<tr><td colspan="5">尚無覆蓋資料</td></tr>'}</tbody>
+          <thead><tr><th>社區</th><th>區域</th><th>狀態</th><th>總筆數</th><th>已覆蓋房型數</th><th>最新月份</th><th>房型</th></tr></thead>
+          <tbody>{''.join(coverage_rows) or '<tr><td colspan="7">尚無覆蓋資料</td></tr>'}</tbody>
         </table>
       </section>
+    </section>
+
+    <section class="tab-panel" data-panel="sources">
+      <section>
+        <h2>資料來源現況</h2>
+        <div class="grid">{source_cards_html}</div>
+      </section>
       <section class="card">
-        <h2>資料說明</h2>
-        <ul>
-          <li>目前資料只保留 baseline 序列，不再顯示或依賴 real data。</li>
-          <li>月變化摘要已獨立成分頁，篩選只作用在那一頁。</li>
-          <li>走勢圖與排行都以所有追蹤社區、所有房型為基礎。</li>
-        </ul>
+        <h2>下一步擴充建議</h2>
+        <ol>
+          <li>保留目前社區頁來源，持續抓社區級價格資訊與欄位。</li>
+          <li>新增第 2 個公開來源，優先補目前觀察清單裡尚無可公開資料的社區。</li>
+          <li>原始資料層維持 source、source_url、raw_hash，後續補上 fetched_at、來源型別與比對信心欄位。</li>
+          <li>展示層只使用能解釋來源的資料，不再用 fallback 補滿畫面。</li>
+        </ol>
       </section>
     </section>
   </div>
