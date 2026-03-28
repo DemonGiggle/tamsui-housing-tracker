@@ -110,3 +110,10 @@ When adding more sources, prefer extending raw rows with:
 3. ingest raw rows into `observations.json` with explicit `source`, `source_url`, `raw_hash`
 4. keep new rows separated from display until parsing quality is reviewed
 5. only then decide which Sinyi-derived rows are eligible for public dashboard use
+
+## Implementation principle: parameterized source scripts
+To keep the project maintainable, source ingestion should be scriptable and parameterized:
+- a fetch script should accept a target community as an argument when needed
+- the same script should also support batch mode for all mapped communities
+- adding a new community should usually mean only updating the mapping file, not rewriting parser logic
+- parsing should prefer stable JSON/state blobs from the page over brittle free-text scraping when possible

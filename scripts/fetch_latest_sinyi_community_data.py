@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+import argparse
 import hashlib
 import json
 import re
 import subprocess
 import time
-from datetime import date, datetime
+from datetime import datetime, UTC
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,16 +14,17 @@ OBS_PATH = ROOT / 'data' / 'observations.json'
 MAP_PATH = ROOT / 'data' / 'sinyi_community_map.json'
 CACHE_PATH = ROOT / 'data' / 'sinyi_fetch_cache.json'
 UA = 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123 Safari/537.36'
+NEXT_DATA_RE = re.compile(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', re.S)
 
-ROOM_PAT = re.compile(r'(?P<rooms>\d+)房')
-MONTH_PAT = re.compile(r'(?P<roc>\d{2,3}年\d{2}月)')
-PRICE_PAT = re.compile(r'(?P<price>\d+(?:,\d{3})*(?:\.\d+)?)萬')
-UNIT_PAT = re.compile(r'(?P<unit>\d+(?:\.\d+)?)萬/坪')
-SIZE_PAT = re.compile(r'建坪(?P<size>\d+(?:\.\d+)?)坪')
-AGE_PAT = re.compile(r'(?P<age>\d+(?:\.\d+)?)年')
-FLOOR_PAT = re.compile(r'(?P<floor>\d+樓/\d+樓)')
-ADDRESS_PAT = re.compile(r'新北市淡水區[^\s]+')
-COMMUNITY_PAT = re.compile(r'^(?P<name>.+?)實價登錄', re.M)
+
+def load_json(path: Path, default):
+    if not path.exists():
+        return default
+    return json.loads(path.read_text())
+
+
+def save_json(path: Path, data):
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
 
 
 def http_get(url: str) -> str:
@@ -42,16 +44,6 @@ def http_get(url: str) -> str:
     return res.stdout
 
 
-def load_json(path: Path, default):
-    if not path.exists():
-        return default
-    return json.loads(path.read_text())
-
-
-def save_json(path: Path, data):
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
-
-
 def watched_communities():
     watch = load_json(WATCHLIST_PATH, {})
     names = []
@@ -65,146 +57,230 @@ def watched_communities():
     return names
 
 
-def normalize_month(roc_text: str) -> str:
-    m = re.match(r'(\d{2,3})年(\d{2})月', roc_text)
+def extract_next_data(html: str):
+    m = NEXT_DATA_RE.search(html)
     if not m:
-        return ''
-    return f'{int(m.group(1)) + 1911:04d}-{int(m.group(2)):02d}'
+        raise RuntimeError('next_data_not_found')
+    return json.loads(m.group(1))
 
 
-def month_to_date(month: str) -> str:
-    return month + '-01' if month else str(date.today())
-
-
-def infer_layout_type(text: str) -> str:
-    m = ROOM_PAT.search(text)
-    if not m:
-        return '未分類'
-    rooms = int(m.group('rooms'))
-    if rooms == 0:
-        return '套房'
-    if rooms >= 4:
-        return '4房以上'
-    return f'{rooms}房'
-
-
-def extract_first(pattern, text, cast=str, default=None):
-    m = pattern.search(text)
-    if not m:
-        return default
-    if m.groupdict():
-        value = next((v for v in m.groupdict().values() if v is not None), None)
-    else:
-        value = m.group(0)
+def roc_to_iso_month(value):
     if value is None:
+        return ''
+    text = str(value)
+    m = re.match(r'^(\d{2,3})(\d{2})$', text)
+    if m:
+        year = int(m.group(1)) + 1911
+        month = int(m.group(2))
+        return f'{year:04d}-{month:02d}'
+    m = re.match(r'^(\d{4})(\d{2})$', text)
+    if m:
+        return f'{int(m.group(1)):04d}-{int(m.group(2)):02d}'
+    return ''
+
+
+def infer_layout_type(item):
+    rooms = item.get('room')
+    if isinstance(rooms, (int, float)):
+        if rooms == 0:
+            return '套房'
+        if rooms >= 4:
+            return '4房以上'
+        return f'{int(rooms)}房'
+    kind = str(item.get('pattern') or item.get('layout') or item.get('type') or '')
+    m = re.search(r'(\d+)房', kind)
+    if m:
+        n = int(m.group(1))
+        if n >= 4:
+            return '4房以上'
+        return f'{n}房'
+    if '套房' in kind:
+        return '套房'
+    return '未分類'
+
+
+def to_float(v, default=0.0):
+    if v in (None, ''):
         return default
-    if cast is str:
-        return value
-    return cast(value.replace(',', '')) if cast else value
+    try:
+        return float(v)
+    except Exception:
+        return default
 
 
-def parse_rows(text: str, source_url: str, watch_community: str):
+def to_bool_parking(item):
+    if item.get('parkingprice') not in (None, '', 0):
+        return True
+    if item.get('refparkingprice') not in (None, '', 0):
+        return True
+    text = ' '.join(str(item.get(k) or '') for k in ['car', 'memo', 'note', 'type'])
+    return '車位' in text
+
+
+def normalize_trade_row(item, watch_community, source_url):
+    observed_month = roc_to_iso_month(item.get('soldDate'))
+    if not observed_month:
+        return None
+    total_price = to_float(item.get('totalPrice'))
+    unit_price = to_float(item.get('uniPrice'))
+    ref_unit_price = to_float(item.get('refuniprice'))
+    size_ping = to_float(item.get('areaBuilding'))
+    building_age = to_float(item.get('houseAge'))
+    rooms = to_float(item.get('room'))
+    address_text = str(item.get('address') or '')
+    floor_text = str(item.get('floor') or '')
+    layout_type = infer_layout_type(item)
+    if total_price <= 0 or unit_price <= 0:
+        return None
+    raw_key = '|'.join([
+        'sinyi.community',
+        str(item.get('tradeID') or ''),
+        watch_community,
+        observed_month,
+        str(total_price),
+        str(unit_price),
+        address_text,
+    ])
+    return {
+        'observed_at': observed_month + '-01',
+        'observed_month': observed_month,
+        'type': 'listing',
+        'region': '淡水',
+        'community': watch_community,
+        'layout_type': layout_type,
+        'rooms': rooms,
+        'source': 'sinyi.community',
+        'source_type': 'listing',
+        'source_url': source_url,
+        'source_record_id': str(item.get('tradeID') or ''),
+        'total_price': total_price,
+        'unit_price': unit_price,
+        'ref_unit_price': ref_unit_price,
+        'size_ping': size_ping,
+        'building_age': building_age,
+        'parking': to_bool_parking(item),
+        'address_text': address_text,
+        'floor_text': floor_text,
+        'note': 'weekly auto-fetch from Sinyi __NEXT_DATA__ tradeData',
+        'fetched_at': datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z'),
+        'raw_hash': hashlib.sha1(raw_key.encode('utf-8')).hexdigest()[:16],
+    }
+
+
+def parse_page(html: str, watch_community: str, source_url: str):
+    data = extract_next_data(html)
+    reducer = data['props']['initialReduxState']['communityReducer']
+    trade_data = reducer.get('tradeData') or []
+    community_trend = ((reducer.get('communityTrendList') or {}).get('communityTrend')) or []
+
     rows = []
-    blocks = re.split(r'(?=(?:\d{2,3}年\d{2}月))', text)
-    for block in blocks:
-        month_match = MONTH_PAT.match(block.strip())
-        if not month_match:
-            continue
-        observed_month = normalize_month(month_match.group('roc'))
-        unit_price = extract_first(UNIT_PAT, block, float)
-        total_price = extract_first(PRICE_PAT, block, float)
-        size_ping = extract_first(SIZE_PAT, block, float, 0.0)
-        building_age = extract_first(AGE_PAT, block, float, 0.0)
-        address_text = extract_first(ADDRESS_PAT, block, str, '') or ''
-        floor_text = extract_first(FLOOR_PAT, block, str, '') or ''
-        layout_type = infer_layout_type(block)
-        rooms_match = ROOM_PAT.search(block)
-        rooms = float(rooms_match.group('rooms')) if rooms_match else 0.0
-        parking = '有車位' in block or '含車位' in block
-        if not observed_month or not unit_price or not total_price:
-            continue
-        raw_key = '|'.join([
-            'sinyi-community',
-            watch_community,
-            observed_month,
-            layout_type,
-            str(total_price),
-            str(unit_price),
-            str(size_ping),
-            address_text,
-            floor_text,
-        ])
-        rows.append({
-            'observed_at': month_to_date(observed_month),
-            'observed_month': observed_month,
-            'type': 'listing',
-            'region': '淡水',
-            'community': watch_community,
-            'layout_type': layout_type,
-            'rooms': rooms,
-            'source': 'sinyi.community',
-            'source_type': 'listing',
-            'source_url': source_url,
-            'total_price': total_price,
-            'unit_price': unit_price,
-            'size_ping': size_ping,
-            'building_age': building_age,
-            'parking': parking,
-            'address_text': address_text,
-            'floor_text': floor_text,
-            'note': 'weekly auto-fetch from Sinyi community page',
-            'fetched_at': datetime.utcnow().isoformat(timespec='seconds') + 'Z',
-            'raw_hash': hashlib.sha1(raw_key.encode('utf-8')).hexdigest()[:16],
-        })
-    return rows
+    for item in trade_data:
+        row = normalize_trade_row(item, watch_community, source_url)
+        if row:
+            rows.append(row)
+
+    trend_points = []
+    for item in community_trend:
+        month = roc_to_iso_month(item.get('date'))
+        uni = to_float(item.get('uniPrice'))
+        if month and uni > 0:
+            trend_points.append({
+                'month': month,
+                'uni_price': uni,
+                'trans_count': item.get('transCount'),
+            })
+
+    meta = reducer.get('communityContentList') or {}
+    return {
+        'rows': rows,
+        'trend_points': trend_points,
+        'meta': {
+            'source_name': meta.get('name'),
+            'address': meta.get('address'),
+            'age': meta.get('age'),
+            'households': meta.get('holdnum') or meta.get('houseNum'),
+        }
+    }
+
+
+def resolve_targets(args, mapping):
+    if args.community:
+        return [args.community]
+    if args.all_mapped:
+        return list(mapping.keys())
+    targets = []
+    for name in watched_communities():
+        if name in mapping:
+            targets.append(name)
+    return targets
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--community', help='fetch only one mapped watchlist community name')
+    parser.add_argument('--all-mapped', action='store_true', help='fetch all mapped communities')
+    parser.add_argument('--dry-run', action='store_true', help='do not write observations.json')
+    args = parser.parse_args()
+
     mapping = load_json(MAP_PATH, {})
     cache = load_json(CACHE_PATH, {})
     rows = load_json(OBS_PATH, [])
     existing = {r.get('raw_hash') for r in rows if r.get('raw_hash')}
 
+    targets = resolve_targets(args, mapping)
     added = []
     failures = []
     skipped = []
 
-    for community in watched_communities():
+    for community in targets:
         info = mapping.get(community)
         if not info:
             skipped.append({'community': community, 'reason': 'mapping_missing'})
             continue
         url = info['url']
         try:
-            text = http_get(url)
-            parsed = parse_rows(text, url, community)
-            new_rows = [r for r in parsed if r['raw_hash'] not in existing]
-            for row in new_rows:
-                existing.add(row['raw_hash'])
-                rows.append(row)
+            html = http_get(url)
+            parsed = parse_page(html, community, url)
+            new_rows = [r for r in parsed['rows'] if r['raw_hash'] not in existing]
+            if not args.dry_run:
+                for row in new_rows:
+                    existing.add(row['raw_hash'])
+                    rows.append(row)
             added.extend(new_rows)
             cache[community] = {
                 'url': url,
-                'last_fetch': datetime.utcnow().isoformat(timespec='seconds') + 'Z',
-                'parsed_rows': len(parsed),
+                'last_fetch': datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z'),
+                'html_size': len(html),
+                'source_name': parsed['meta'].get('source_name'),
+                'parsed_rows': len(parsed['rows']),
                 'new_rows': len(new_rows),
+                'trend_points': len(parsed['trend_points']),
+                'parser_status': 'ok',
             }
             time.sleep(1.0)
         except Exception as e:
             failures.append({'community': community, 'error': repr(e)})
+            cache[community] = {
+                'url': url,
+                'last_fetch': datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z'),
+                'parser_status': 'error',
+                'error': repr(e),
+            }
 
     save_json(CACHE_PATH, cache)
-    save_json(OBS_PATH, rows)
+    if not args.dry_run:
+        save_json(OBS_PATH, rows)
 
     summary = {
         'ok': True,
+        'targets': targets,
         'mapped_communities': len(mapping),
-        'watched_communities': len(watched_communities()),
         'added_rows': len(added),
         'added_by_community': {c: sum(1 for r in added if r['community'] == c) for c in sorted({r['community'] for r in added})},
         'skipped': skipped,
         'failures': failures,
-        'total_rows': len(rows),
+        'total_rows': len(rows) if not args.dry_run else len(load_json(OBS_PATH, [])),
+        'dry_run': args.dry_run,
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

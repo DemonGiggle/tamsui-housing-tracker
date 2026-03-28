@@ -1,26 +1,42 @@
 {
   "摩納哥社區": {
     "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0009663",
-    "fetch_ok": true,
+    "last_fetch": "2026-03-28T03:44:45Z",
     "html_size": 418571,
-    "parser_status": "needs_improved_parser"
+    "source_name": "摩納哥",
+    "parsed_rows": 5,
+    "new_rows": 5,
+    "trend_points": 21,
+    "parser_status": "ok"
   },
   "水立方": {
     "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0020419",
-    "fetch_ok": true,
+    "last_fetch": "2026-03-28T03:44:47Z",
     "html_size": 389539,
-    "parser_status": "needs_improved_parser"
+    "source_name": "水立方",
+    "parsed_rows": 5,
+    "new_rows": 5,
+    "trend_points": 12,
+    "parser_status": "ok"
   },
   "托斯卡尼翡冷翠": {
     "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0010085",
-    "fetch_ok": true,
+    "last_fetch": "2026-03-28T03:44:49Z",
     "html_size": 378807,
-    "parser_status": "needs_improved_parser"
+    "source_name": "翡冷翠",
+    "parsed_rows": 5,
+    "new_rows": 5,
+    "trend_points": 9,
+    "parser_status": "ok"
   },
   "托斯卡尼麥迪奇名家": {
     "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0011957",
-    "fetch_ok": true,
+    "last_fetch": "2026-03-28T03:44:51Z",
     "html_size": 403279,
-    "parser_status": "needs_improved_parser"
+    "source_name": "麥迪奇",
+    "parsed_rows": 5,
+    "new_rows": 5,
+    "trend_points": 5,
+    "parser_status": "ok"
   }
 }
