@@ -5,19 +5,15 @@ from reportlab.lib import colors
 from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_CENTER
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from pathlib import Path
 import json
 from collections import Counter
 
 ROOT = Path('/home/gigo/.openclaw/projects/tamsui-housing-tracker')
 OUT = ROOT / 'docs' / 'tamsui-housing-progress-report.pdf'
-FONT_PATH = Path('/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf')
-FONT_NAME = 'DroidSansFallback'
-if FONT_PATH.exists():
-    pdfmetrics.registerFont(TTFont(FONT_NAME, str(FONT_PATH)))
-else:
-    FONT_NAME = 'Helvetica'
+CJK_FONT = 'STSong-Light'
+pdfmetrics.registerFont(UnicodeCIDFont(CJK_FONT))
 
 watch = json.loads((ROOT / 'data' / 'watchlist.json').read_text())
 obs = json.loads((ROOT / 'data' / 'observations.json').read_text())
@@ -32,10 +28,10 @@ series_pairs = sorted({(s['community'], s['layout_type']) for s in series})
 real_count_by_comm = Counter(o['community'] for o in real_obs)
 
 styles = getSampleStyleSheet()
-styles.add(ParagraphStyle(name='TitleCenter', parent=styles['Title'], alignment=TA_CENTER, fontName=FONT_NAME))
-styles.add(ParagraphStyle(name='Section', parent=styles['Heading1'], fontName=FONT_NAME, textColor=colors.HexColor('#1f3a8a'), spaceAfter=8))
-styles.add(ParagraphStyle(name='BodyCJKish', parent=styles['BodyText'], fontName=FONT_NAME, leading=18, spaceAfter=6))
-styles.add(ParagraphStyle(name='Small', parent=styles['BodyText'], fontName=FONT_NAME, fontSize=9, leading=12, textColor=colors.grey))
+styles.add(ParagraphStyle(name='TitleCenter', parent=styles['Title'], alignment=TA_CENTER, fontName=CJK_FONT))
+styles.add(ParagraphStyle(name='Section', parent=styles['Heading1'], fontName=CJK_FONT, textColor=colors.HexColor('#1f3a8a'), spaceAfter=8))
+styles.add(ParagraphStyle(name='BodyCJKish', parent=styles['BodyText'], fontName=CJK_FONT, leading=18, spaceAfter=6))
+styles.add(ParagraphStyle(name='Small', parent=styles['BodyText'], fontName=CJK_FONT, fontSize=9, leading=12, textColor=colors.grey))
 
 story = []
 story.append(Spacer(1, 18*mm))
@@ -89,7 +85,7 @@ t = Table(metrics, colWidths=[60*mm, 90*mm])
 t.setStyle(TableStyle([
     ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#dbeafe')),
     ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor('#111827')),
-    ('FONTNAME', (0,0), (-1,-1), FONT_NAME),
+    ('FONTNAME', (0,0), (-1,-1), CJK_FONT),
     ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
     ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f8fafc')]),
     ('VALIGN', (0,0), (-1,-1), 'TOP'),
@@ -113,7 +109,7 @@ for comm, cnt in real_count_by_comm.most_common(8):
 rt = Table(rank_rows, colWidths=[90*mm, 40*mm])
 rt.setStyle(TableStyle([
     ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#dbeafe')),
-    ('FONTNAME', (0,0), (-1,-1), FONT_NAME),
+    ('FONTNAME', (0,0), (-1,-1), CJK_FONT),
     ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
     ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#f8fafc')]),
 ]))
@@ -123,7 +119,7 @@ story.append(rt)
 story.append(PageBreak())
 story.append(Paragraph('我認為目前進度在哪一階段', styles['Section']))
 stage_items = [
-    '如果用產品階段來看，現在大概是：<b>MVP 已完成、資料擴充期剛開始</b>。',
+    '如果用產品階段來看，現在大概是：MVP 已完成、資料擴充期剛開始。',
     '不是只有概念，因為資料模型、腳本、dashboard 都能運作。',
     '但也還不是成熟產品，因為資料來源與真實樣本覆蓋率還不足，還需要持續補樣本。',
     '這個階段最有價值的不是再重寫前端，而是持續提高真實 observation 的密度與更新節奏。',
@@ -135,7 +131,7 @@ story.append(Paragraph('目前風險／不足', styles['Section']))
 risk_items = [
     '真實樣本占比低，baseline 仍然是主體，因此序列的穩定性高，但靈敏度不足。',
     'watchlist 結構目前只有 1 個核心 watch community 物件（摩納哥社區），其他多數社區比較像透過 nearby cluster 進來。',
-    '部分資料仍明顯帶有示例/測試痕跡（例如 示例社區），之後應整理掉，避免污染正式報表。',
+    '部分資料仍明顯帶有示例／測試痕跡（例如 示例社區），之後應整理掉，避免污染正式報表。',
     '目前偏向單機 JSON 流程，優點是簡單，但若未來資料量再大，可能要考慮 SQLite 或更正式的資料層。',
 ]
 story.append(ListFlowable([ListItem(Paragraph(x, styles['BodyCJKish'])) for x in risk_items], bulletType='bullet'))
