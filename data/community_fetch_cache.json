@@ -1,0 +1,47 @@
+{
+  "水立方": {
+    "building_id": "172908",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "托斯卡尼翡冷翠": {
+    "building_id": "7475",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "托斯卡尼麥迪奇名家": {
+    "building_id": "7479",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "荷雅名人館": {
+    "building_id": "8529",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "荷雅時尚館": {
+    "building_id": "174913",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "尚海": {
+    "building_id": "169930",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "清淞": {
+    "building_id": "174701",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "高第": {
+    "building_id": "21875",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  },
+  "摩納哥社區": {
+    "building_id": "174606",
+    "resolved_at": "2026-03-28",
+    "search_url": "known-map"
+  }
+}
