@@ -21,7 +21,7 @@
 For public-facing output, the project should follow these rules:
 1. A community may remain on the watchlist even when data is missing.
 2. Display layers should only use rows that can be explained and traced back to a source.
-3. No fallback-derived rows should be used to pretend coverage exists.
+3. Missing coverage should remain visibly missing.
 4. Each raw row should remain attributable to a specific source and URL.
 
 ## Recommended next sources

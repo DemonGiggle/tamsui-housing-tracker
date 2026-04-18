@@ -3,7 +3,7 @@
 ## Current direction
 
 This tracker is **not primarily a single-listing dedup database**.
-It is now a **baseline-first monthly tracker**.
+It is a **source-backed monthly tracker**.
 The main goal is to build a long-term price series for:
 
 - each `community`
@@ -12,8 +12,8 @@ The main goal is to build a long-term price series for:
 
 So the recommended mental model is:
 
-1. Keep raw observations / usable anchors
-2. Rebuild a monthly baseline layer for analysis
+1. Keep raw observations from real sources
+2. Aggregate them into monthly series for analysis
 3. Use filtering/views later instead of prematurely throwing data away
 
 ## Observation fields
@@ -26,7 +26,7 @@ So the recommended mental model is:
 - `layout_type`
 - `rooms`
 - `source`
-- `source_type`: e.g. `listing`, `baseline` (current primary layer is `baseline`)
+- `source_type`: e.g. `listing`, `transaction`, other real-source categories
 - `source_url`: optional original page URL
 - `address_text`: optional source address text
 - `floor_text`: optional floor text

@@ -19,11 +19,11 @@ watch = json.loads((ROOT / 'data' / 'watchlist.json').read_text())
 obs = json.loads((ROOT / 'data' / 'observations.json').read_text())
 series = json.loads((ROOT / 'data' / 'series_cache.json').read_text())
 
-real_obs = [o for o in obs if o.get('source_type') != 'baseline']
+real_obs = list(obs)
 months = sorted({o.get('observed_month') for o in obs if o.get('observed_month')})
 real_months = sorted({o.get('observed_month') for o in real_obs if o.get('observed_month')})
 real_comms = sorted({o.get('community') for o in real_obs if o.get('community')})
-series_real = [s for s in series if s.get('has_real')]
+series_real = list(series)
 series_pairs = sorted({(s['community'], s['layout_type']) for s in series})
 real_count_by_comm = Counter(o['community'] for o in real_obs)
 
@@ -39,13 +39,13 @@ story.append(Paragraph('淡水房價搜尋／追蹤專案進度報告', styles['
 story.append(Spacer(1, 6*mm))
 story.append(Paragraph('專案：Tamsui Housing Tracker', styles['BodyCJKish']))
 story.append(Paragraph('報告時間：2026-03-28', styles['BodyCJKish']))
-story.append(Paragraph('定位：以「月度 baseline-first」方式，先建立可持續追蹤的社區 × 房型價格序列，再逐步增加真實樣本與自動化。', styles['BodyCJKish']))
+story.append(Paragraph('定位：以可追溯來源的月度觀測為核心，逐步建立可持續追蹤的社區 × 房型價格序列。', styles['BodyCJKish']))
 
 story.append(Spacer(1, 6*mm))
 story.append(Paragraph('一頁結論', styles['Section']))
 summary_items = [
     '專案 MVP 已成形：資料結構、更新腳本、月度序列、靜態 dashboard 都已經存在。',
-    f'目前累積原始 observation 共 {len(obs)} 筆，其中 baseline {len(obs)-len(real_obs)} 筆、真實樣本 {len(real_obs)} 筆。',
+    f'目前累積原始 observation 共 {len(obs)} 筆，全部都應可追溯到真實來源。',
     f'月度追蹤涵蓋 {months[0]} 到 {months[-1]}，共 {len(months)} 個月份。',
     f'已形成 {len(series_pairs)} 組「社區 × 房型」月度序列，聚合後月序列共 {len(series)} 筆。',
     '核心追蹤對象已聚焦在摩納哥社區及其周邊 8 個鄰近社區，符合目前看屋/比較情境。',
@@ -59,7 +59,7 @@ completed = [
     '已建立專案 repo 與基本結構（README、data、scripts、docs）。',
     '已定義 watchlist：區域、重點社區、房型分類、摩納哥周邊社區名單。',
     '已建立 observation schema，可記錄總價、單價、坪數、屋齡、車位、來源、月份等欄位。',
-    '已完成 baseline series builder：能把社區 × 房型資料整理成每月序列。',
+    '已完成月度序列聚合：能把社區 × 房型資料整理成每月序列。',
     '已完成 dashboard builder：輸出靜態 HTML dashboard。',
     '已完成 canonical update pipeline（update_all.py），代表後續手動更新流程已經有主入口。',
 ]
@@ -74,10 +74,9 @@ metrics = [
     ['摩納哥周邊社區數', str(len(watch['communities'][0]['nearby_communities']))],
     ['房型分類數', str(len(watch['layout_types']))],
     ['原始 observation', str(len(obs))],
-    ['真實樣本 observation', str(len(real_obs))],
-    ['baseline observation', str(len(obs)-len(real_obs))],
+    ['原始 observation（可追溯來源）', str(len(real_obs))],
     ['聚合月序列筆數', str(len(series))],
-    ['有真實樣本的月序列筆數', str(len(series_real))],
+    ['有資料的月序列筆數', str(len(series_real))],
     ['社區 × 房型組合數', str(len(series_pairs))],
     ['涵蓋月份', f'{months[0]} ~ {months[-1]}'],
 ]
@@ -95,11 +94,11 @@ story.append(t)
 story.append(PageBreak())
 story.append(Paragraph('目前資料內容的判讀', styles['Section']))
 insights = [
-    '現在的資料主體仍是 baseline-first：也就是先確保每個社區 × 房型都有月度參考點，讓趨勢圖能先跑起來。',
-    '真實樣本已經開始混入部分月份，代表架構已能支援 baseline 與實際公開樣本共存。',
+    '現在的資料主體應該只包含可追溯來源的觀測，月序列完整度取決於實際樣本密度。',
+    '目前的序列如果有空缺，代表那些月份或社區真的還缺資料，而不是被人工補滿。',
     f'目前有真實樣本的社區包括：{", ".join(real_comms[:10])}。',
     '其中，清淞、荷雅名人館、荷雅時尚館、尚海、托斯卡尼麥迪奇名家、高第的真實樣本相對較多。',
-    '摩納哥社區本身已經進入序列，但真實樣本量仍偏少，所以現在更適合拿來看「位置與方向」，還不適合做太精細的價格判斷。',
+    '摩納哥社區本身已經進入序列，但樣本量仍偏少，所以現在更適合拿來看「位置與方向」，還不適合做太精細的價格判斷。',
 ]
 story.append(ListFlowable([ListItem(Paragraph(x, styles['BodyCJKish'])) for x in insights], bulletType='bullet'))
 
@@ -129,7 +128,7 @@ story.append(ListFlowable([ListItem(Paragraph(x, styles['BodyCJKish'])) for x in
 story.append(Spacer(1, 4*mm))
 story.append(Paragraph('目前風險／不足', styles['Section']))
 risk_items = [
-    '真實樣本占比低，baseline 仍然是主體，因此序列的穩定性高，但靈敏度不足。',
+    '真實樣本密度仍偏低，因此序列覆蓋還不夠完整，判讀時要保守。',
     'watchlist 結構目前只有 1 個核心 watch community 物件（摩納哥社區），其他多數社區比較像透過 nearby cluster 進來。',
     '部分資料仍明顯帶有示例／測試痕跡（例如 示例社區），之後應整理掉，避免污染正式報表。',
     '目前偏向單機 JSON 流程，優點是簡單，但若未來資料量再大，可能要考慮 SQLite 或更正式的資料層。',
@@ -141,7 +140,7 @@ story.append(Paragraph('下一步建議（務實版）', styles['Section']))
 next_items = [
     '優先持續補「摩納哥社區 + 周邊 8 社區」的真實樣本，尤其是 2房 / 3房。',
     '整理掉示例資料，讓正式 dashboard 更乾淨。',
-    '加一份「真實樣本覆蓋率」統計，直接看每個社區 × 房型有多少月份只有 baseline。',
+    '加一份「資料覆蓋率」統計，直接看每個社區 × 房型目前實際有多少月份有資料。',
     '如果你要開始實際看屋，可把看屋路線上的新社區加進 nearby 清單。',
     '等真實樣本密度夠了，再來做告警、排名、異常波動提示，才比較值得。',
 ]
@@ -149,7 +148,7 @@ story.append(ListFlowable([ListItem(Paragraph(x, styles['BodyCJKish'])) for x in
 
 story.append(Spacer(1, 6*mm))
 story.append(Paragraph('一句話總結', styles['Section']))
-story.append(Paragraph('這個專案現在已經不是「想法」，而是有資料骨架、有更新流程、有 dashboard 的可運作原型；下一階段的重點不是重做，而是把真實樣本補厚，讓它從可看趨勢，進一步變成可輔助判斷。', styles['BodyCJKish']))
+story.append(Paragraph('這個專案現在已經不是「想法」，而是有更新流程、有 dashboard、也有可追溯資料的可運作原型；下一階段的重點不是重做，而是把樣本補厚，讓它從可看趨勢，進一步變成可輔助判斷。', styles['BodyCJKish']))
 
 story.append(Spacer(1, 8*mm))
 story.append(Paragraph('附註：本報告依據專案內 README、watchlist、observations、series_cache 與 docs dashboard 整理。', styles['Small']))

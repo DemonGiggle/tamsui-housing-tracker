@@ -1,6 +1,6 @@
 # Tamsui Housing Tracker
 
-MVP for long-term Tamsui housing market tracking, now oriented around monthly baseline tracking first.
+MVP for long-term Tamsui housing market tracking, focused on source-backed observations only.
 
 ## Goals
 
@@ -13,7 +13,7 @@ Track long-term price trends for:
 ## MVP scope
 
 - local JSON dataset
-- baseline-first monthly tracking
+- source-backed monthly tracking
 - simple update script for manual observations
 - static HTML dashboard
 - community watchlist
@@ -26,7 +26,6 @@ Track long-term price trends for:
 - `data/observations.json` — raw observation log
 - `data/watchlist.json` — watched regions/communities/layout types/nearby communities
 - `scripts/add_observation.py` — append one observation
-- `scripts/build_baseline_series.py` — rebuild the monthly baseline layer for all watched community × layout pairs
 - `scripts/build_dashboard.py` — generate static dashboard HTML
 - `scripts/update_all.py` — canonical pipeline entrypoint; can optionally rebuild baseline first
 - `docs/index.html` — generated dashboard
@@ -75,18 +74,13 @@ Run the canonical refresh pipeline:
 python3 scripts/update_all.py
 ```
 
-Rebuild monthly baseline first, then refresh everything:
-
-```bash
-python3 scripts/update_all.py --rebuild-baseline
-```
 
 ## Notes
 
 This MVP is intentionally simple. It is designed to start collecting structured housing observations first, then evolve into automated scraping, charts, alerts, and richer market analysis.
 
-## Baseline-first direction
+## Current direction
 
-Current working direction: prioritize collecting a monthly baseline for each community × layout pair.
+Current working direction: prioritize collecting source-backed monthly observations for each watched community × layout pair.
 
-In this project, baseline is **not fake transaction data**. It is the primary monthly reference layer built from incomplete but grounded public information, such as community summary pricing, layout ranges, and limited usable samples. For the current use case, this baseline layer is the main product: it is enough to track monthly price position and direction over time.
+This project should only present rows that can be traced back to a real source. If coverage is sparse, the dashboard should show that honestly instead of filling gaps with synthetic rows.
