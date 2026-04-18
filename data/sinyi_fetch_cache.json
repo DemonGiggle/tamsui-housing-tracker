@@ -51,11 +51,11 @@
   },
   "藍海名廈": {
     "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0019718",
-    "last_fetch": "2026-04-18T04:10:57Z",
+    "last_fetch": "2026-04-18T04:32:52Z",
     "html_size": 397523,
     "source_name": "藍海名廈",
     "parsed_rows": 5,
-    "new_rows": 5,
+    "new_rows": 0,
     "trend_points": 12,
     "parser_status": "ok"
   }
