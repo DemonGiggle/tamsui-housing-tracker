@@ -1,67 +1,92 @@
 {
   "水立方": {
     "building_id": "172908",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "托斯卡尼翡冷翠": {
     "building_id": "7475",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "托斯卡尼麥迪奇名家": {
     "building_id": "7479",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "荷雅名人館": {
     "building_id": "8529",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "荷雅時尚館": {
     "building_id": "174913",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "尚海": {
     "building_id": "169930",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "清淞": {
     "building_id": "174701",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "高第": {
     "building_id": "21875",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "摩納哥社區": {
     "building_id": "174606",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "西恩那社區": {
     "building_id": "5835",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "印象法蘭": {
     "building_id": "32326",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "布拉諾": {
     "building_id": "28720",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   },
   "麗景社區": {
     "building_id": "6102",
-    "resolved_at": "2026-03-28",
+    "resolved_at": "2026-04-18",
+    "search_url": "known-map"
+  },
+  "海洋都心": {
+    "building_id": "174632",
+    "resolved_at": "2026-04-18",
+    "search_url": "https://community.houseprice.tw/list/%E6%96%B0%E5%8C%97%E5%B8%82_city/%E6%B7%A1%E6%B0%B4%E5%8D%80_zip/%E6%B5%B7%E6%B4%8B%E9%83%BD%E5%BF%83_kw/"
+  },
+  "名軒海樂地": {
+    "building_id": "163605",
+    "resolved_at": "2026-04-18",
+    "search_url": "https://community.houseprice.tw/list/%E6%96%B0%E5%8C%97%E5%B8%82_city/%E6%B7%A1%E6%B0%B4%E5%8D%80_zip/%E5%90%8D%E8%BB%92%E6%B5%B7%E6%A8%82%E5%9C%B0_kw/"
+  },
+  "宏普有逸天": {
+    "building_id": "28351",
+    "resolved_at": "2026-04-18",
+    "search_url": "https://community.houseprice.tw/list/%E6%96%B0%E5%8C%97%E5%B8%82_city/%E6%B7%A1%E6%B0%B4%E5%8D%80_zip/%E5%AE%8F%E6%99%AE%E6%9C%89%E9%80%B8%E5%A4%A9_kw/"
+  },
+  "台北灣-江南大宅": {
+    "building_id": "38366",
+    "resolved_at": "2026-04-18",
+    "search_url": "https://community.houseprice.tw/list/%E6%96%B0%E5%8C%97%E5%B8%82_city/%E6%B7%A1%E6%B0%B4%E5%8D%80_zip/%E5%8F%B0%E5%8C%97%E7%81%A3-%E6%B1%9F%E5%8D%97%E5%A4%A7%E5%AE%85_kw/"
+  },
+  "海揚社區": {
+    "building_id": "5914",
+    "resolved_at": "2026-04-18",
     "search_url": "known-map"
   }
 }

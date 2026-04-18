@@ -30,6 +30,7 @@ KNOWN_BUILDING_IDS = {
     '印象法蘭': '32326',
     '布拉諾': '28720',
     '麗景社區': '6102',
+    '海揚社區': '5914',
 }
 
 COMMUNITY_SOURCE_NAME = {
@@ -70,6 +71,25 @@ def load_json(path: Path, default):
 
 def save_json(path: Path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+
+
+def merge_rows_by_hash(existing_rows, new_rows):
+    merged = []
+    seen = set()
+    for row in existing_rows + new_rows:
+        raw_hash = row.get('raw_hash')
+        key = raw_hash or json.dumps(row, ensure_ascii=False, sort_keys=True)
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(row)
+    merged.sort(key=lambda row: (
+        row.get('observed_at', ''),
+        row.get('community', ''),
+        row.get('layout_type', ''),
+        row.get('raw_hash', ''),
+    ))
+    return merged
 
 
 def watched_communities():
@@ -206,7 +226,10 @@ def main():
         except Exception as e:
             failures.append({'community': community, 'error': str(e)})
     save_json(CACHE_PATH, cache)
-    save_json(OBS_PATH, rows)
+    latest_rows = load_json(OBS_PATH, [])
+    merged_rows = merge_rows_by_hash(latest_rows, rows)
+    save_json(OBS_PATH, merged_rows)
+    rows = merged_rows
     summary = {
         'ok': True,
         'watched_communities': len(communities),
