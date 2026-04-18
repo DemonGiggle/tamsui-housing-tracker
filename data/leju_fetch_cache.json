@@ -1,1 +1,26 @@
-{}
+{
+  "海揚社區": {
+    "last_checked": "2026-04-18T03:02:21Z",
+    "status": "mapped",
+    "fetch_mode": "browser-session-required",
+    "oid": "Lc38188319428e",
+    "url": "https://www.leju.com.tw/community/Lc38188319428e",
+    "note": "Leju is currently protected by Cloudflare bot checks. Use browser-assisted extraction after verification passes in a real browser session."
+  },
+  "摩納哥社區": {
+    "last_checked": "2026-04-18T03:02:21Z",
+    "status": "mapped",
+    "fetch_mode": "browser-session-required",
+    "oid": "Lc7931877466af",
+    "url": "https://www.leju.com.tw/community/Lc7931877466af",
+    "note": "Leju is currently protected by Cloudflare bot checks. Use browser-assisted extraction after verification passes in a real browser session."
+  },
+  "海洋都心": {
+    "last_checked": "2026-04-18T03:02:21Z",
+    "status": "mapped",
+    "fetch_mode": "browser-session-required",
+    "oid": "L4521015205aecb",
+    "url": "https://www.leju.com.tw/community/L4521015205aecb",
+    "note": "Leju is currently protected by Cloudflare bot checks. Use browser-assisted extraction after verification passes in a real browser session."
+  }
+}

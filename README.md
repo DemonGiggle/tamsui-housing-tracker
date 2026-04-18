@@ -28,7 +28,7 @@ Track long-term price trends for:
 - `scripts/add_observation.py` — append one observation
 - `scripts/build_dashboard.py` — generate static dashboard HTML
 - `scripts/update_all.py` — canonical pipeline entrypoint
-- `scripts/fetch_leju_community_data.py` — bootstrap Leju community page mappings via search results
+- `scripts/fetch_leju_community_data.py` — Leju community mapping/status helper for browser-assisted extraction
 - `data/leju_community_map.json` — Leju community URL/oid registry
 - `docs/index.html` — generated dashboard
 
@@ -86,3 +86,5 @@ This MVP is intentionally simple. It is designed to start collecting structured 
 Current working direction: prioritize collecting source-backed monthly observations for each watched community × layout pair.
 
 This project should only present rows that can be traced back to a real source. If coverage is sparse, the dashboard should show that honestly instead of filling gaps with synthetic rows.
+
+Leju is currently tracked as a browser-assisted source candidate because its community pages are behind Cloudflare bot checks.
