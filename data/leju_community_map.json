@@ -1,0 +1,20 @@
+{
+  "海揚社區": {
+    "community_name": "海揚",
+    "oid": "Lc38188319428e",
+    "url": "https://www.leju.com.tw/community/Lc38188319428e",
+    "source": "manual-seed-from-search"
+  },
+  "摩納哥社區": {
+    "community_name": "摩納哥",
+    "oid": "Lc7931877466af",
+    "url": "https://www.leju.com.tw/community/Lc7931877466af",
+    "source": "manual-seed-from-search"
+  },
+  "海洋都心": {
+    "community_name": "海洋都心",
+    "oid": "L4521015205aecb",
+    "url": "https://www.leju.com.tw/community/L4521015205aecb",
+    "source": "manual-seed-from-search"
+  }
+}

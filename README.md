@@ -27,7 +27,9 @@ Track long-term price trends for:
 - `data/watchlist.json` — watched regions/communities/layout types/nearby communities
 - `scripts/add_observation.py` — append one observation
 - `scripts/build_dashboard.py` — generate static dashboard HTML
-- `scripts/update_all.py` — canonical pipeline entrypoint; can optionally rebuild baseline first
+- `scripts/update_all.py` — canonical pipeline entrypoint
+- `scripts/fetch_leju_community_data.py` — bootstrap Leju community page mappings via search results
+- `data/leju_community_map.json` — Leju community URL/oid registry
 - `docs/index.html` — generated dashboard
 
 ## Current watched nearby communities
