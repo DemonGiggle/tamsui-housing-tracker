@@ -297,6 +297,61 @@
     "avg_total_price": 5980.0
   },
   {
+    "community": "海揚社區",
+    "layout_type": "1房",
+    "month": "2025-08",
+    "sample_count": 1,
+    "avg_unit_price": 43.85,
+    "median_unit_price": 43.85,
+    "min_unit_price": 43.85,
+    "max_unit_price": 43.85,
+    "avg_total_price": 960.0
+  },
+  {
+    "community": "海揚社區",
+    "layout_type": "2房",
+    "month": "2025-10",
+    "sample_count": 1,
+    "avg_unit_price": 44.34,
+    "median_unit_price": 44.34,
+    "min_unit_price": 44.34,
+    "max_unit_price": 44.34,
+    "avg_total_price": 870.0
+  },
+  {
+    "community": "海揚社區",
+    "layout_type": "2房",
+    "month": "2025-12",
+    "sample_count": 1,
+    "avg_unit_price": 42.23,
+    "median_unit_price": 42.23,
+    "min_unit_price": 42.23,
+    "max_unit_price": 42.23,
+    "avg_total_price": 1180.0
+  },
+  {
+    "community": "海揚社區",
+    "layout_type": "3房",
+    "month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 35.51,
+    "median_unit_price": 35.51,
+    "min_unit_price": 35.51,
+    "max_unit_price": 35.51,
+    "avg_total_price": 1680.0
+  },
+  {
+    "community": "海揚社區",
+    "layout_type": "3房",
+    "month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 36.42,
+    "median_unit_price": 36.42,
+    "min_unit_price": 36.42,
+    "max_unit_price": 36.42,
+    "avg_total_price": 1434.0
+  },
+  {
     "community": "海洋都心",
     "layout_type": "1房",
     "month": "2026-04",

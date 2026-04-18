@@ -38,5 +38,15 @@
     "new_rows": 5,
     "trend_points": 5,
     "parser_status": "ok"
+  },
+  "海揚社區": {
+    "url": "https://www.sinyi.com.tw/communitylist/communityinfo/0007816",
+    "last_fetch": "2026-04-18T02:51:49Z",
+    "html_size": 388690,
+    "source_name": "海揚",
+    "parsed_rows": 5,
+    "new_rows": 5,
+    "trend_points": 19,
+    "parser_status": "ok"
   }
 }

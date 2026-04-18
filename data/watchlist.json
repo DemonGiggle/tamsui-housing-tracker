@@ -50,6 +50,12 @@
       "region": "淡海新市鎮",
       "priority": "high",
       "notes": "使用者指定新增追蹤社區，先列入新市鎮觀察清單"
+    },
+    {
+      "name": "海揚社區",
+      "region": "淡水站周邊",
+      "priority": "high",
+      "notes": "使用者指定新增追蹤社區"
     }
   ],
   "layout_types": [
