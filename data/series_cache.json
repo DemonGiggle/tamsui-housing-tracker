@@ -394,5 +394,60 @@
     "min_unit_price": 27.8,
     "max_unit_price": 27.8,
     "avg_total_price": 1268.0
+  },
+  {
+    "community": "藍海名廈",
+    "layout_type": "1房",
+    "month": "2025-09",
+    "sample_count": 1,
+    "avg_unit_price": 30.63,
+    "median_unit_price": 30.63,
+    "min_unit_price": 30.63,
+    "max_unit_price": 30.63,
+    "avg_total_price": 560.0
+  },
+  {
+    "community": "藍海名廈",
+    "layout_type": "1房",
+    "month": "2025-10",
+    "sample_count": 1,
+    "avg_unit_price": 33.16,
+    "median_unit_price": 33.16,
+    "min_unit_price": 33.16,
+    "max_unit_price": 33.16,
+    "avg_total_price": 355.0
+  },
+  {
+    "community": "藍海名廈",
+    "layout_type": "1房",
+    "month": "2025-11",
+    "sample_count": 1,
+    "avg_unit_price": 26.97,
+    "median_unit_price": 26.97,
+    "min_unit_price": 26.97,
+    "max_unit_price": 26.97,
+    "avg_total_price": 296.0
+  },
+  {
+    "community": "藍海名廈",
+    "layout_type": "2房",
+    "month": "2026-01",
+    "sample_count": 1,
+    "avg_unit_price": 27.58,
+    "median_unit_price": 27.58,
+    "min_unit_price": 27.58,
+    "max_unit_price": 27.58,
+    "avg_total_price": 756.0
+  },
+  {
+    "community": "藍海名廈",
+    "layout_type": "3房",
+    "month": "2025-10",
+    "sample_count": 1,
+    "avg_unit_price": 25.31,
+    "median_unit_price": 25.31,
+    "min_unit_price": 25.31,
+    "max_unit_price": 25.31,
+    "avg_total_price": 1015.0
   }
 ]

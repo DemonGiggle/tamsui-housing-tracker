@@ -88,5 +88,10 @@
     "building_id": "5914",
     "resolved_at": "2026-04-18",
     "search_url": "known-map"
+  },
+  "藍海名廈": {
+    "building_id": "7125",
+    "resolved_at": "2026-04-18",
+    "search_url": "https://community.houseprice.tw/list/%E6%96%B0%E5%8C%97%E5%B8%82_city/%E6%B7%A1%E6%B0%B4%E5%8D%80_zip/%E8%97%8D%E6%B5%B7%E5%90%8D%E5%BB%88_kw/"
   }
 }
